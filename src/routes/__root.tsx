@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { GlassNav } from "../components/GlassNav";
 import { MeshBackdrop } from "../components/MeshBackdrop";
 import { CoffeeFab } from "../components/CoffeeFab";
+import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -112,6 +113,7 @@ function RootComponent() {
           <Outlet />
         </main>
         <CoffeeFab />
+        <Toaster theme="dark" position="top-center" />
       </div>
     </QueryClientProvider>
   );
