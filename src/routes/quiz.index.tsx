@@ -7,7 +7,7 @@ import { useIdentity } from "../stores/identity";
 import { rankFor } from "../data/ranks";
 import { ArrowRight, RotateCw } from "lucide-react";
 
-export const Route = createFileRoute("/quiz")({
+export const Route = createFileRoute("/quiz/")({
   head: () => ({
     meta: [
       { title: "Do I Have Rizz? — The Quiz" },
