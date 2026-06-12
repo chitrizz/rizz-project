@@ -9,38 +9,174 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RateRouteImport } from './routes/rate'
+import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as HoroscopeRouteImport } from './routes/horoscope'
+import { Route as GeneratorRouteImport } from './routes/generator'
+import { Route as AstroRouteImport } from './routes/astro'
+import { Route as ArenaRouteImport } from './routes/arena'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as QuizResultRouteImport } from './routes/quiz.result'
 
+const RateRoute = RateRouteImport.update({
+  id: '/rate',
+  path: '/rate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HoroscopeRoute = HoroscopeRouteImport.update({
+  id: '/horoscope',
+  path: '/horoscope',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GeneratorRoute = GeneratorRouteImport.update({
+  id: '/generator',
+  path: '/generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AstroRoute = AstroRouteImport.update({
+  id: '/astro',
+  path: '/astro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArenaRoute = ArenaRouteImport.update({
+  id: '/arena',
+  path: '/arena',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuizResultRoute = QuizResultRouteImport.update({
+  id: '/result',
+  path: '/result',
+  getParentRoute: () => QuizRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/arena': typeof ArenaRoute
+  '/astro': typeof AstroRoute
+  '/generator': typeof GeneratorRoute
+  '/horoscope': typeof HoroscopeRoute
+  '/quiz': typeof QuizRouteWithChildren
+  '/rate': typeof RateRoute
+  '/quiz/result': typeof QuizResultRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/arena': typeof ArenaRoute
+  '/astro': typeof AstroRoute
+  '/generator': typeof GeneratorRoute
+  '/horoscope': typeof HoroscopeRoute
+  '/quiz': typeof QuizRouteWithChildren
+  '/rate': typeof RateRoute
+  '/quiz/result': typeof QuizResultRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/arena': typeof ArenaRoute
+  '/astro': typeof AstroRoute
+  '/generator': typeof GeneratorRoute
+  '/horoscope': typeof HoroscopeRoute
+  '/quiz': typeof QuizRouteWithChildren
+  '/rate': typeof RateRoute
+  '/quiz/result': typeof QuizResultRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/arena'
+    | '/astro'
+    | '/generator'
+    | '/horoscope'
+    | '/quiz'
+    | '/rate'
+    | '/quiz/result'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/arena'
+    | '/astro'
+    | '/generator'
+    | '/horoscope'
+    | '/quiz'
+    | '/rate'
+    | '/quiz/result'
+  id:
+    | '__root__'
+    | '/'
+    | '/arena'
+    | '/astro'
+    | '/generator'
+    | '/horoscope'
+    | '/quiz'
+    | '/rate'
+    | '/quiz/result'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArenaRoute: typeof ArenaRoute
+  AstroRoute: typeof AstroRoute
+  GeneratorRoute: typeof GeneratorRoute
+  HoroscopeRoute: typeof HoroscopeRoute
+  QuizRoute: typeof QuizRouteWithChildren
+  RateRoute: typeof RateRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/rate': {
+      id: '/rate'
+      path: '/rate'
+      fullPath: '/rate'
+      preLoaderRoute: typeof RateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/horoscope': {
+      id: '/horoscope'
+      path: '/horoscope'
+      fullPath: '/horoscope'
+      preLoaderRoute: typeof HoroscopeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/generator': {
+      id: '/generator'
+      path: '/generator'
+      fullPath: '/generator'
+      preLoaderRoute: typeof GeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/astro': {
+      id: '/astro'
+      path: '/astro'
+      fullPath: '/astro'
+      preLoaderRoute: typeof AstroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arena': {
+      id: '/arena'
+      path: '/arena'
+      fullPath: '/arena'
+      preLoaderRoute: typeof ArenaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +184,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quiz/result': {
+      id: '/quiz/result'
+      path: '/result'
+      fullPath: '/quiz/result'
+      preLoaderRoute: typeof QuizResultRouteImport
+      parentRoute: typeof QuizRoute
+    }
   }
 }
 
+interface QuizRouteChildren {
+  QuizResultRoute: typeof QuizResultRoute
+}
+
+const QuizRouteChildren: QuizRouteChildren = {
+  QuizResultRoute: QuizResultRoute,
+}
+
+const QuizRouteWithChildren = QuizRoute._addFileChildren(QuizRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArenaRoute: ArenaRoute,
+  AstroRoute: AstroRoute,
+  GeneratorRoute: GeneratorRoute,
+  HoroscopeRoute: HoroscopeRoute,
+  QuizRoute: QuizRouteWithChildren,
+  RateRoute: RateRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
