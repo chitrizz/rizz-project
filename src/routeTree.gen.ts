@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RateRouteImport } from './routes/rate'
+import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as HoroscopeRouteImport } from './routes/horoscope'
 import { Route as GeneratorRouteImport } from './routes/generator'
 import { Route as AstroRouteImport } from './routes/astro'
@@ -21,6 +22,11 @@ import { Route as QuizResultRouteImport } from './routes/quiz.result'
 const RateRoute = RateRouteImport.update({
   id: '/rate',
   path: '/rate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HoroscopeRoute = HoroscopeRouteImport.update({
@@ -49,9 +55,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const QuizIndexRoute = QuizIndexRouteImport.update({
-  id: '/quiz/',
-  path: '/quiz/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => QuizRoute,
 } as any)
 const QuizResultRoute = QuizResultRouteImport.update({
   id: '/result',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/astro': typeof AstroRoute
   '/generator': typeof GeneratorRoute
   '/horoscope': typeof HoroscopeRoute
+  '/quiz': typeof QuizRouteWithChildren
   '/rate': typeof RateRoute
   '/quiz/result': typeof QuizResultRoute
   '/quiz/': typeof QuizIndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesById {
   '/astro': typeof AstroRoute
   '/generator': typeof GeneratorRoute
   '/horoscope': typeof HoroscopeRoute
+  '/quiz': typeof QuizRouteWithChildren
   '/rate': typeof RateRoute
   '/quiz/result': typeof QuizResultRoute
   '/quiz/': typeof QuizIndexRoute
@@ -98,6 +106,7 @@ export interface FileRouteTypes {
     | '/astro'
     | '/generator'
     | '/horoscope'
+    | '/quiz'
     | '/rate'
     | '/quiz/result'
     | '/quiz/'
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/astro'
     | '/generator'
     | '/horoscope'
+    | '/quiz'
     | '/rate'
     | '/quiz/result'
     | '/quiz/'
@@ -129,8 +139,8 @@ export interface RootRouteChildren {
   AstroRoute: typeof AstroRoute
   GeneratorRoute: typeof GeneratorRoute
   HoroscopeRoute: typeof HoroscopeRoute
+  QuizRoute: typeof QuizRouteWithChildren
   RateRoute: typeof RateRoute
-  QuizIndexRoute: typeof QuizIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -140,6 +150,13 @@ declare module '@tanstack/react-router' {
       path: '/rate'
       fullPath: '/rate'
       preLoaderRoute: typeof RateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/horoscope': {
@@ -179,10 +196,10 @@ declare module '@tanstack/react-router' {
     }
     '/quiz/': {
       id: '/quiz/'
-      path: '/quiz'
+      path: '/'
       fullPath: '/quiz/'
       preLoaderRoute: typeof QuizIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof QuizRoute
     }
     '/quiz/result': {
       id: '/quiz/result'
@@ -194,14 +211,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface QuizRouteChildren {
+  QuizResultRoute: typeof QuizResultRoute
+  QuizIndexRoute: typeof QuizIndexRoute
+}
+
+const QuizRouteChildren: QuizRouteChildren = {
+  QuizResultRoute: QuizResultRoute,
+  QuizIndexRoute: QuizIndexRoute,
+}
+
+const QuizRouteWithChildren = QuizRoute._addFileChildren(QuizRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArenaRoute: ArenaRoute,
   AstroRoute: AstroRoute,
   GeneratorRoute: GeneratorRoute,
   HoroscopeRoute: HoroscopeRoute,
+  QuizRoute: QuizRouteWithChildren,
   RateRoute: RateRoute,
-  QuizIndexRoute: QuizIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
