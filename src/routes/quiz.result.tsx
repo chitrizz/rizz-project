@@ -5,6 +5,8 @@ import confetti from "canvas-confetti";
 import { toPng } from "html-to-image";
 import { useIdentity } from "../stores/identity";
 import { IdentityCard } from "../components/IdentityCard";
+import { SkewButton } from "../components/SkewButton";
+import { SectionLabel } from "../components/SectionLabel";
 import { rankFor } from "../data/ranks";
 import { copyToClipboard, shareTwitter, shareWhatsApp } from "../lib/share";
 import { Download, Twitter, MessageCircle, Link2, RotateCw, Sparkles } from "lucide-react";
@@ -29,18 +31,15 @@ function ResultPage() {
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
-    if (!latest) {
-      navigate({ to: "/quiz" });
-      return;
-    }
+    if (!latest) { navigate({ to: "/quiz" }); return; }
     const t = setTimeout(() => {
       setRevealed(true);
       if (latest.score >= 60) {
         confetti({
-          particleCount: 140,
-          spread: 100,
+          particleCount: 160,
+          spread: 110,
           origin: { y: 0.4 },
-          colors: ["#a855f7", "#22d3ee", "#d946ef", "#fbbf24"],
+          colors: ["#d4ff00", "#22d3ee", "#ff2e93", "#ffd400", "#ffffff"],
         });
       }
     }, 350);
@@ -53,7 +52,7 @@ function ResultPage() {
   async function downloadCard() {
     if (!cardRef.current) return;
     try {
-      const dataUrl = await toPng(cardRef.current, { backgroundColor: "#0A0A0A", pixelRatio: 2 });
+      const dataUrl = await toPng(cardRef.current, { backgroundColor: "#050505", pixelRatio: 2 });
       const link = document.createElement("a");
       link.download = `rizz-card-${latest!.cardNumber}.png`;
       link.href = dataUrl;
@@ -63,28 +62,31 @@ function ResultPage() {
     }
   }
 
-  const shareText = `I scored ${latest.score}/100 on HaveRizz — Rank: ${rank.title} ${rank.emoji}. Find out your Rizz: haverizz.com`;
+  const shareText = `I scored ${latest.score}/100 on HaveRizz — Rank: ${rank.title}. Find out your Rizz: haverizz.com`;
 
   return (
-    <div className="min-h-[calc(100vh-100px)] px-6 py-12">
+    <div className="min-h-[calc(100vh-120px)] px-6 py-12">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-10"
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
         >
-          <p className="text-[11px] uppercase tracking-[0.3em] text-zinc-500 mb-3">Your Result</p>
-          <h1 className="font-display text-4xl sm:text-6xl font-semibold text-zinc-50 tracking-tighter">
-            You're a <span className="text-gradient italic">{rank.title}</span>
+          <SectionLabel index="—" label="Your Verdict" />
+          <h1 className="mt-6 font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold uppercase tracking-tighter text-white leading-[0.95]">
+            You're a
           </h1>
-          <p className="text-zinc-400 mt-3 max-w-md mx-auto">{rank.tagline}</p>
+          <p className="mt-2 font-serif italic text-5xl sm:text-7xl lg:text-8xl tracking-tight text-[#d4ff00]" style={{ textShadow: "0 0 40px rgba(212,255,0,0.4)" }}>
+            {rank.title}.
+          </p>
+          <p className="text-white/60 mt-5 max-w-md mx-auto">{rank.tagline}</p>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.96 }}
+          initial={{ opacity: 0, y: 40, scale: 0.94 }}
           animate={revealed ? { opacity: 1, y: 0, scale: 1 } : {}}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <IdentityCard
             ref={cardRef}
@@ -98,43 +100,39 @@ function ResultPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={revealed ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-10 flex flex-wrap gap-3 justify-center"
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-12 flex flex-wrap gap-3 justify-center"
         >
-          <button onClick={downloadCard} className="h-11 bg-zinc-50 text-zinc-950 px-5 rounded-full text-sm font-medium flex items-center gap-2 hover:bg-white transition">
-            <Download className="size-4" /> Download PNG
-          </button>
-          <button onClick={() => shareTwitter(shareText)} className="h-11 glass ring-1 ring-white/10 px-5 rounded-full text-sm font-medium text-zinc-50 flex items-center gap-2 hover:bg-white/10 transition">
-            <Twitter className="size-4" /> Tweet
-          </button>
-          <button onClick={() => shareWhatsApp(shareText)} className="h-11 glass ring-1 ring-white/10 px-5 rounded-full text-sm font-medium text-zinc-50 flex items-center gap-2 hover:bg-white/10 transition">
-            <MessageCircle className="size-4" /> WhatsApp
-          </button>
-          <button
+          <SkewButton onClick={downloadCard}><Download className="size-4" /> Download</SkewButton>
+          <SkewButton variant="outline" onClick={() => shareTwitter(shareText)}><Twitter className="size-4" /> Tweet</SkewButton>
+          <SkewButton variant="outline" onClick={() => shareWhatsApp(shareText)}><MessageCircle className="size-4" /> WhatsApp</SkewButton>
+          <SkewButton
+            variant="outline"
             onClick={async () => {
               const ok = await copyToClipboard(shareText);
               ok ? toast.success("Copied. Paste it anywhere.") : toast.error("Copy failed.");
             }}
-            className="h-11 glass ring-1 ring-white/10 px-5 rounded-full text-sm font-medium text-zinc-50 flex items-center gap-2 hover:bg-white/10 transition"
           >
             <Link2 className="size-4" /> Copy
-          </button>
+          </SkewButton>
         </motion.div>
 
-        <div className="mt-14 grid sm:grid-cols-2 gap-4">
-          <Link to="/quiz" className="p-6 rounded-2xl glass ring-1 ring-white/8 hover:ring-brand-purple/40 transition group">
+        <div className="mt-16 grid sm:grid-cols-2 gap-5">
+          <Link to="/quiz" className="group p-7 border border-white/10 bg-[#0a0a0c] hover:border-[#d4ff00]/60 transition">
             <div className="flex items-center gap-3 mb-2">
-              <RotateCw className="size-4 text-brand-purple" />
-              <p className="font-medium text-zinc-50">Re-test</p>
+              <RotateCw className="size-4 text-[#d4ff00]" />
+              <p className="font-mono text-[10px] uppercase tracking-widest text-white/60 font-bold">Re-test</p>
             </div>
-            <p className="text-sm text-zinc-500">10 new random questions. Different vibe, different score.</p>
+            <h3 className="font-display text-2xl font-extrabold text-white uppercase tracking-tight">10 new questions</h3>
+            <p className="mt-2 text-sm text-white/50">Different vibe, different score.</p>
           </Link>
-          <Link to="/astro" className="p-6 rounded-2xl glass ring-1 ring-white/8 hover:ring-brand-cyan/40 transition group">
+          <Link to="/astro" className="group p-7 border border-white/10 bg-[#0a0a0c] hover:border-[#22d3ee]/60 transition">
             <div className="flex items-center gap-3 mb-2">
-              <Sparkles className="size-4 text-brand-cyan" />
-              <p className="font-medium text-zinc-50">Try AstroRizz</p>
+              <Sparkles className="size-4 text-[#22d3ee]" />
+              <p className="font-mono text-[10px] uppercase tracking-widest text-white/60 font-bold">Try AstroRizz</p>
             </div>
-            <p className="text-sm text-zinc-500">Check your compatibility before you fumble a perfectly good crush.</p>
+            <h3 className="font-display text-2xl font-extrabold text-white uppercase tracking-tight">Check compatibility</h3>
+            <p className="mt-2 text-sm text-white/50">Before you fumble a perfectly good crush.</p>
           </Link>
         </div>
       </div>
