@@ -4,13 +4,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useArena, type ArenaPost } from "../stores/arena";
 import { generateAnonName } from "../lib/anon-name";
 import { RIZZ_CATEGORIES } from "../data/rizz-lines";
+import { SectionLabel } from "../components/SectionLabel";
+import { SkewButton } from "../components/SkewButton";
 import { Flame, Snowflake, Send, Plus, X, Trophy } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/arena")({
   head: () => ({
     meta: [
-      { title: "Rizz Battle Arena — Reddit-Style Community" },
+      { title: "Rizz Battle Arena — Community Combat" },
       { name: "description", content: "Submit your best rizz lines. Community votes Fire (upvote) or Fizz (downvote). Climb the leaderboard." },
       { property: "og:title", content: "Rizz Battle Arena" },
       { property: "og:description", content: "Reddit-style rizz combat. Submit. Vote. Climb." },
@@ -26,7 +28,6 @@ function sortPosts(posts: ArenaPost[], sort: Sort): ArenaPost[] {
   if (sort === "new") return arr.sort((a, b) => b.createdAt - a.createdAt);
   if (sort === "top") return arr.sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes));
   if (sort === "controversial") return arr.sort((a, b) => Math.min(b.upvotes, b.downvotes) - Math.min(a.upvotes, a.downvotes));
-  // hot: net score / age
   return arr.sort((a, b) => {
     const ageA = (Date.now() - a.createdAt) / 3600000 + 1;
     const ageB = (Date.now() - b.createdAt) / 3600000 + 1;
@@ -50,31 +51,29 @@ function ArenaPage() {
   return (
     <div className="px-6 py-12">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-10 flex items-end justify-between flex-wrap gap-4">
+        <div className="mb-12 flex items-end justify-between flex-wrap gap-4">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.3em] text-zinc-500 mb-2">Rizz Battle Arena</p>
-            <h1 className="font-display text-4xl sm:text-6xl font-semibold text-zinc-50 tracking-tighter">
-              The <span className="text-gradient italic">Coliseum</span>
+            <SectionLabel index="05" label="Battle Arena" />
+            <h1 className="mt-6 font-display text-5xl sm:text-7xl lg:text-8xl font-extrabold uppercase tracking-tighter text-white leading-[0.95]">
+              The
             </h1>
-            <p className="text-zinc-400 mt-3 max-w-xl">Submit your best lines. Community fires 🔥 or fizzes 🧊. Climb the all-time leaderboard.</p>
+            <p className="font-serif italic text-5xl sm:text-7xl lg:text-8xl tracking-tight text-[#d4ff00]" style={{ textShadow: "0 0 30px rgba(212,255,0,0.35)" }}>
+              Coliseum.
+            </p>
+            <p className="mt-6 text-white/60 max-w-xl text-lg">Submit your best lines. Community fires 🔥 or fizzes 🧊. Climb the all-time leaderboard.</p>
           </div>
-          <button
-            onClick={() => setOpenSubmit(true)}
-            className="h-12 bg-brand-purple text-white text-sm font-medium px-5 flex items-center gap-2 rounded-full hover:brightness-110 transition shadow-[0_0_30px_-10px_#a855f7]"
-          >
-            <Plus className="size-4" /> Submit a Line
-          </button>
+          <SkewButton onClick={() => setOpenSubmit(true)} size="lg"><Plus className="size-4" /> Submit Line</SkewButton>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_320px] gap-8">
+        <div className="grid lg:grid-cols-[1fr_340px] gap-8">
           <div>
-            <div className="flex gap-2 mb-6 overflow-x-auto no-scrollbar">
+            <div className="flex gap-1 mb-6 border-b border-white/10 overflow-x-auto no-scrollbar">
               {(["hot", "new", "top", "controversial"] as Sort[]).map((s) => (
                 <button
                   key={s}
                   onClick={() => setSort(s)}
-                  className={`h-9 px-4 rounded-full text-xs font-medium ring-1 transition capitalize ${
-                    sort === s ? "bg-zinc-50 text-zinc-950 ring-zinc-50" : "glass text-zinc-300 ring-white/10 hover:ring-white/20"
+                  className={`px-5 py-3 font-mono text-[11px] font-bold uppercase tracking-wider border-b-2 -mb-px transition ${
+                    sort === s ? "border-[#d4ff00] text-[#d4ff00]" : "border-transparent text-white/40 hover:text-white"
                   }`}
                 >
                   {s}
@@ -82,7 +81,7 @@ function ArenaPage() {
               ))}
             </div>
 
-            <div className="grid gap-3">
+            <div className="grid gap-px bg-white/10 border border-white/10">
               <AnimatePresence initial={false}>
                 {sorted.map((p) => (
                   <motion.div
@@ -91,23 +90,23 @@ function ArenaPage() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="p-5 rounded-2xl glass ring-1 ring-white/8 grid grid-cols-[auto_1fr] gap-5"
+                    className="bg-[#050505] hover:bg-[#0a0a0c] p-5 grid grid-cols-[auto_1fr] gap-5 transition"
                   >
                     <div className="flex flex-col items-center gap-1.5 pt-1">
                       <button
                         onClick={() => vote(p.id, "up")}
-                        className={`size-9 grid place-items-center rounded-lg transition ${
-                          p.myVote === "up" ? "bg-brand-gold/15 text-brand-gold ring-1 ring-brand-gold/40" : "hover:bg-white/5 text-zinc-500 hover:text-brand-gold"
+                        className={`size-10 grid place-items-center border transition ${
+                          p.myVote === "up" ? "bg-[#d4ff00]/15 text-[#d4ff00] border-[#d4ff00]" : "border-white/10 text-white/40 hover:text-[#d4ff00] hover:border-[#d4ff00]/50"
                         }`}
                         aria-label="Upvote"
                       >
                         <Flame className="size-4" />
                       </button>
-                      <p className="font-display text-sm font-semibold text-zinc-50">{p.upvotes - p.downvotes}</p>
+                      <p className="font-display text-base font-extrabold text-white tracking-tight">{p.upvotes - p.downvotes}</p>
                       <button
                         onClick={() => vote(p.id, "down")}
-                        className={`size-9 grid place-items-center rounded-lg transition ${
-                          p.myVote === "down" ? "bg-brand-cyan/15 text-brand-cyan ring-1 ring-brand-cyan/40" : "hover:bg-white/5 text-zinc-500 hover:text-brand-cyan"
+                        className={`size-10 grid place-items-center border transition ${
+                          p.myVote === "down" ? "bg-[#ff2e93]/15 text-[#ff2e93] border-[#ff2e93]" : "border-white/10 text-white/40 hover:text-[#ff2e93] hover:border-[#ff2e93]/50"
                         }`}
                         aria-label="Downvote"
                       >
@@ -115,17 +114,17 @@ function ArenaPage() {
                       </button>
                     </div>
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2 mb-2 text-xs text-zinc-500">
-                        <span className="text-zinc-300 font-medium">@{p.author}</span>
+                      <div className="flex items-center gap-2 mb-2 font-mono text-[10px] uppercase tracking-widest text-white/40">
+                        <span className="text-white/70 font-bold">@{p.author}</span>
                         <span>·</span>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 ring-1 ring-white/10 text-zinc-400">{p.category}</span>
+                        <span className="px-1.5 py-0.5 bg-white/5 border border-white/10 text-white/60">{p.category}</span>
                         <span>·</span>
                         <span>{timeAgo(p.createdAt)}</span>
                       </div>
-                      <p className="text-zinc-100 text-base leading-snug">{p.line}</p>
-                      <div className="mt-3 flex items-center gap-4 text-[11px] text-zinc-500">
-                        <span className="flex items-center gap-1"><Flame className="size-3 text-brand-gold" /> {p.upvotes}</span>
-                        <span className="flex items-center gap-1"><Snowflake className="size-3 text-brand-cyan" /> {p.downvotes}</span>
+                      <p className="text-white text-base sm:text-lg leading-snug">{p.line}</p>
+                      <div className="mt-3 flex items-center gap-4 font-mono text-[10px] text-white/40 uppercase tracking-widest">
+                        <span className="flex items-center gap-1"><Flame className="size-3 text-[#d4ff00]" /> {p.upvotes}</span>
+                        <span className="flex items-center gap-1"><Snowflake className="size-3 text-[#ff2e93]" /> {p.downvotes}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -135,26 +134,26 @@ function ArenaPage() {
           </div>
 
           <aside className="space-y-4">
-            <div className="p-5 rounded-2xl glass ring-1 ring-white/8">
-              <div className="flex items-center gap-2 mb-4">
-                <Trophy className="size-4 text-brand-gold" />
-                <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-medium">All-Time Top 5</p>
+            <div className="p-5 border border-white/10 bg-[#0a0a0c] holo-edge">
+              <div className="flex items-center gap-2 mb-5">
+                <Trophy className="size-4 text-[#d4ff00]" />
+                <p className="font-mono text-[10px] uppercase tracking-widest text-white/60 font-bold">All-Time Top 5</p>
               </div>
-              <div className="grid gap-3">
+              <div className="grid gap-4">
                 {leaders.map((p, i) => (
-                  <div key={p.id} className="flex gap-3">
-                    <div className="font-display text-base font-semibold text-zinc-600 w-5">#{i + 1}</div>
+                  <div key={p.id} className="flex gap-3 border-t border-white/5 first:border-0 pt-4 first:pt-0">
+                    <div className="font-display text-xl font-extrabold text-[#d4ff00] w-7 leading-none">{String(i + 1).padStart(2, "0")}</div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-medium text-zinc-300 truncate">@{p.author}</p>
-                      <p className="text-xs text-zinc-500 truncate">{p.line}</p>
-                      <p className="text-[10px] text-brand-gold mt-0.5">{p.upvotes - p.downvotes} net</p>
+                      <p className="font-mono text-[10px] font-bold text-white uppercase tracking-widest truncate">@{p.author}</p>
+                      <p className="text-xs text-white/50 truncate mt-1">{p.line}</p>
+                      <p className="font-mono text-[10px] text-[#d4ff00] mt-1">+{p.upvotes - p.downvotes} net</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="p-5 rounded-2xl glass ring-1 ring-white/8 text-xs text-zinc-500 leading-relaxed">
-              Your votes & posts live in your browser. Sync across devices is coming with accounts.
+            <div className="p-5 border border-white/10 bg-[#0a0a0c] font-mono text-[10px] uppercase tracking-widest text-white/40 leading-relaxed">
+              Your votes & posts live in your browser. Cross-device sync ships with accounts.
             </div>
           </aside>
         </div>
@@ -184,29 +183,30 @@ function SubmitModal({ open, onClose, onSubmit }: { open: boolean; onClose: () =
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/80 backdrop-blur-md"
           onClick={onClose}
         >
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.96 }}
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.96 }}
+            exit={{ opacity: 0, y: 30, scale: 0.95 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md glass-strong ring-1 ring-white/12 rounded-3xl p-6 relative"
+            className="w-full max-w-md glass-strong border border-white/15 holo-edge p-6 relative"
           >
-            <button onClick={onClose} className="absolute top-4 right-4 size-8 grid place-items-center rounded-full hover:bg-white/5" aria-label="Close">
-              <X className="size-4 text-zinc-400" />
+            <button onClick={onClose} className="absolute top-4 right-4 size-8 grid place-items-center hover:bg-white/5" aria-label="Close">
+              <X className="size-4 text-white/60" />
             </button>
-            <h2 className="font-display text-2xl font-semibold text-zinc-50">Submit a line</h2>
-            <p className="text-sm text-zinc-500 mt-1">You'll post anonymously. Let the people decide.</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-2">Submission Protocol</p>
+            <h2 className="font-display text-3xl font-extrabold text-white uppercase tracking-tighter">Drop a line.</h2>
+            <p className="text-sm text-white/60 mt-2">You'll post anonymously. Let the people decide.</p>
 
-            <div className="mt-5 space-y-3">
+            <div className="mt-6 space-y-4">
               <div>
-                <label className="text-[11px] uppercase tracking-widest text-zinc-500 font-medium">Category</label>
+                <label className="font-mono text-[10px] uppercase tracking-widest text-white/50 font-bold">Category</label>
                 <select
                   value={cat}
                   onChange={(e) => setCat(e.target.value)}
-                  className="mt-1.5 w-full h-10 glass ring-1 ring-white/10 rounded-xl px-3 text-sm text-zinc-50 outline-none"
+                  className="mt-1.5 w-full h-10 bg-[#0a0a0c] border border-white/15 px-3 text-sm text-white outline-none focus:border-[#d4ff00]"
                 >
                   {RIZZ_CATEGORIES.map((c) => (
                     <option key={c.id} value={c.name} className="bg-zinc-900">{c.emoji} {c.name}</option>
@@ -214,29 +214,29 @@ function SubmitModal({ open, onClose, onSubmit }: { open: boolean; onClose: () =
                 </select>
               </div>
               <div>
-                <label className="text-[11px] uppercase tracking-widest text-zinc-500 font-medium">Your line</label>
+                <label className="font-mono text-[10px] uppercase tracking-widest text-white/50 font-bold">Your line</label>
                 <textarea
                   value={line}
                   onChange={(e) => setLine(e.target.value)}
                   rows={4}
                   maxLength={240}
                   placeholder="Drop your best one-liner…"
-                  className="mt-1.5 w-full glass ring-1 ring-white/10 rounded-xl px-3 py-2.5 text-sm text-zinc-50 outline-none resize-none placeholder:text-zinc-600"
+                  className="mt-1.5 w-full bg-[#0a0a0c] border border-white/15 px-3 py-2.5 text-sm text-white outline-none resize-none placeholder:text-white/25 focus:border-[#d4ff00]"
                 />
-                <p className="text-[10px] text-zinc-600 text-right mt-1">{line.length}/240</p>
+                <p className="font-mono text-[10px] text-white/30 text-right mt-1">{line.length}/240</p>
               </div>
             </div>
 
-            <button
+            <SkewButton
+              className="mt-6 w-full"
               onClick={() => {
                 if (line.trim().length < 6) { toast.error("A bit longer, please."); return; }
                 onSubmit(cat, line.trim());
                 setLine("");
               }}
-              className="mt-5 w-full h-11 rounded-full bg-brand-purple text-white font-medium text-sm hover:brightness-110 transition flex items-center justify-center gap-2"
             >
               <Send className="size-4" /> Post anonymously
-            </button>
+            </SkewButton>
           </motion.div>
         </motion.div>
       )}

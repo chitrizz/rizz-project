@@ -3,13 +3,15 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRate, type RateVote } from "../stores/rate";
 import { generateAnonName } from "../lib/anon-name";
+import { SectionLabel } from "../components/SectionLabel";
+import { SkewButton } from "../components/SkewButton";
 import { Send, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/rate")({
   head: () => ({
     meta: [
-      { title: "Rate My Rizz" },
+      { title: "Rate My Rizz — The Verdict" },
       { name: "description", content: "Submit a pickup line or text. Community votes Smooth, Mid, or Cringe. Brutal honesty included." },
       { property: "og:title", content: "Rate My Rizz" },
       { property: "og:description", content: "Submit your line. The internet decides if it's Smooth, Mid, or Cringe." },
@@ -18,10 +20,10 @@ export const Route = createFileRoute("/rate")({
   component: RatePage,
 });
 
-const COLORS: Record<RateVote, string> = {
-  smooth: "bg-success/15 text-success ring-success/30",
-  mid: "bg-brand-gold/15 text-brand-gold ring-brand-gold/30",
-  cringe: "bg-danger/15 text-danger ring-danger/30",
+const COLORS: Record<RateVote, { active: string; bar: string; emoji: string }> = {
+  smooth: { active: "bg-[#d4ff00]/15 text-[#d4ff00] border-[#d4ff00]", bar: "bg-[#d4ff00]", emoji: "😎" },
+  mid:    { active: "bg-[#ffd400]/15 text-[#ffd400] border-[#ffd400]", bar: "bg-[#ffd400]", emoji: "😐" },
+  cringe: { active: "bg-[#ff2e93]/15 text-[#ff2e93] border-[#ff2e93]", bar: "bg-[#ff2e93]", emoji: "💀" },
 };
 
 function RatePage() {
@@ -33,39 +35,36 @@ function RatePage() {
   return (
     <div className="px-6 py-12">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-10 flex items-end justify-between flex-wrap gap-4">
+        <div className="mb-12 flex items-end justify-between flex-wrap gap-4">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.3em] text-zinc-500 mb-2">Rate My Rizz</p>
-            <h1 className="font-display text-4xl sm:text-6xl font-semibold text-zinc-50 tracking-tighter">
-              <span className="text-gradient italic">Brutal</span> Honesty.
+            <SectionLabel index="06" label="Rate My Rizz" />
+            <h1 className="mt-6 font-display text-5xl sm:text-7xl lg:text-8xl font-extrabold uppercase tracking-tighter text-white leading-[0.95]">
+              Brutal
             </h1>
-            <p className="text-zinc-400 mt-3 max-w-xl">Post a line. Post a text. The community decides if you cooked or fumbled.</p>
+            <p className="font-serif italic text-5xl sm:text-7xl lg:text-8xl tracking-tight text-[#d4ff00]" style={{ textShadow: "0 0 30px rgba(212,255,0,0.35)" }}>
+              honesty.
+            </p>
+            <p className="mt-6 text-white/60 max-w-xl text-lg">Post a line. Post a text. The community decides if you cooked or fumbled.</p>
           </div>
-          <button
-            onClick={() => setOpen(true)}
-            className="h-12 bg-brand-purple text-white text-sm font-medium px-5 flex items-center gap-2 rounded-full hover:brightness-110 transition shadow-[0_0_30px_-10px_#a855f7]"
-          >
-            <Plus className="size-4" /> Submit Yours
-          </button>
+          <SkewButton onClick={() => setOpen(true)} size="lg"><Plus className="size-4" /> Submit Yours</SkewButton>
         </div>
 
-        <div className="grid gap-3">
+        <div className="grid gap-px bg-white/10 border border-white/10">
           {entries.map((e) => {
             const total = e.smooth + e.mid + e.cringe || 1;
             return (
-              <div key={e.id} className="p-5 rounded-2xl glass ring-1 ring-white/8">
-                <div className="flex items-center gap-2 mb-2 text-xs text-zinc-500">
-                  <span className="text-zinc-300 font-medium">@{e.author}</span>
+              <div key={e.id} className="bg-[#050505] hover:bg-[#0a0a0c] p-6 transition">
+                <div className="flex items-center gap-2 mb-3 font-mono text-[10px] uppercase tracking-widest text-white/40">
+                  <span className="text-white/70 font-bold">@{e.author}</span>
                   <span>·</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 ring-1 ring-white/10 text-zinc-400">{e.type}</span>
+                  <span className="px-1.5 py-0.5 bg-white/5 border border-white/10 text-white/60">{e.type}</span>
                 </div>
-                <p className="text-zinc-100 text-base sm:text-lg leading-snug mb-4">{e.body}</p>
+                <p className="text-white text-base sm:text-lg leading-snug mb-5">{e.body}</p>
 
-                {/* bar */}
-                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden flex mb-3">
-                  <div className="bg-success h-full" style={{ width: `${(e.smooth / total) * 100}%` }} />
-                  <div className="bg-brand-gold h-full" style={{ width: `${(e.mid / total) * 100}%` }} />
-                  <div className="bg-danger h-full" style={{ width: `${(e.cringe / total) * 100}%` }} />
+                <div className="h-1 w-full bg-white/5 overflow-hidden flex mb-4">
+                  <div className={COLORS.smooth.bar + " h-full"} style={{ width: `${(e.smooth / total) * 100}%` }} />
+                  <div className={COLORS.mid.bar + " h-full"} style={{ width: `${(e.mid / total) * 100}%` }} />
+                  <div className={COLORS.cringe.bar + " h-full"} style={{ width: `${(e.cringe / total) * 100}%` }} />
                 </div>
 
                 <div className="flex gap-2 flex-wrap">
@@ -73,11 +72,12 @@ function RatePage() {
                     <button
                       key={v}
                       onClick={() => vote(e.id, v)}
-                      className={`h-9 px-4 rounded-full text-xs font-medium ring-1 capitalize transition ${
-                        e.myVote === v ? COLORS[v] : "glass text-zinc-400 ring-white/10 hover:ring-white/25"
+                      className={`px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-wider border transition flex items-center gap-2 ${
+                        e.myVote === v ? COLORS[v].active : "bg-[#0a0a0c] text-white/50 border-white/10 hover:text-white hover:border-white/30"
                       }`}
                     >
-                      {v === "smooth" ? "😎" : v === "mid" ? "😐" : "💀"} {v} · {e[v]}
+                      <span className="text-sm">{COLORS[v].emoji}</span>
+                      {v} · {e[v]}
                     </button>
                   ))}
                 </div>
@@ -93,21 +93,22 @@ function RatePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/80 backdrop-blur-md"
             onClick={() => setOpen(false)}
           >
             <motion.div
-              initial={{ opacity: 0, y: 20, scale: 0.96 }}
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.96 }}
+              exit={{ opacity: 0, y: 30, scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md glass-strong ring-1 ring-white/12 rounded-3xl p-6 relative"
+              className="w-full max-w-md glass-strong border border-white/15 holo-edge p-6 relative"
             >
-              <button onClick={() => setOpen(false)} className="absolute top-4 right-4 size-8 grid place-items-center rounded-full hover:bg-white/5" aria-label="Close">
-                <X className="size-4 text-zinc-400" />
+              <button onClick={() => setOpen(false)} className="absolute top-4 right-4 size-8 grid place-items-center hover:bg-white/5" aria-label="Close">
+                <X className="size-4 text-white/60" />
               </button>
-              <h2 className="font-display text-2xl font-semibold text-zinc-50">Get rated</h2>
-              <p className="text-sm text-zinc-500 mt-1">Post anonymously. Take the L gracefully.</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 mb-2">Verdict Protocol</p>
+              <h2 className="font-display text-3xl font-extrabold text-white uppercase tracking-tighter">Get rated.</h2>
+              <p className="text-sm text-white/60 mt-2">Post anonymously. Take the L gracefully.</p>
               <SubmitForm
                 onSubmit={(type, body) => {
                   add({ author: generateAnonName(), type, body });
@@ -127,14 +128,14 @@ function SubmitForm({ onSubmit }: { onSubmit: (type: "Pickup Line" | "Text Messa
   const [type, setType] = useState<"Pickup Line" | "Text Message">("Pickup Line");
   const [body, setBody] = useState("");
   return (
-    <div className="mt-5 space-y-3">
-      <div className="flex gap-2">
+    <div className="mt-6 space-y-4">
+      <div className="flex gap-1 border-b border-white/10">
         {(["Pickup Line", "Text Message"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setType(t)}
-            className={`h-9 px-4 rounded-full text-xs font-medium ring-1 transition ${
-              type === t ? "bg-zinc-50 text-zinc-950 ring-zinc-50" : "glass text-zinc-300 ring-white/10 hover:ring-white/20"
+            className={`px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-wider border-b-2 -mb-px transition ${
+              type === t ? "border-[#d4ff00] text-[#d4ff00]" : "border-transparent text-white/40 hover:text-white"
             }`}
           >
             {t}
@@ -147,19 +148,19 @@ function SubmitForm({ onSubmit }: { onSubmit: (type: "Pickup Line" | "Text Messa
         rows={4}
         maxLength={280}
         placeholder="Paste what you sent…"
-        className="w-full glass ring-1 ring-white/10 rounded-xl px-3 py-2.5 text-sm text-zinc-50 outline-none resize-none placeholder:text-zinc-600"
+        className="w-full bg-[#0a0a0c] border border-white/15 px-3 py-2.5 text-sm text-white outline-none resize-none placeholder:text-white/25 focus:border-[#d4ff00]"
       />
-      <p className="text-[10px] text-zinc-600 text-right">{body.length}/280</p>
-      <button
+      <p className="font-mono text-[10px] text-white/30 text-right">{body.length}/280</p>
+      <SkewButton
+        className="w-full"
         onClick={() => {
           if (body.trim().length < 6) { toast.error("A bit longer."); return; }
           onSubmit(type, body.trim());
           setBody("");
         }}
-        className="w-full h-11 rounded-full bg-brand-purple text-white font-medium text-sm hover:brightness-110 transition flex items-center justify-center gap-2"
       >
         <Send className="size-4" /> Post for rating
-      </button>
+      </SkewButton>
     </div>
   );
 }

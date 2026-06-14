@@ -2,9 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { pickQuestions, type QuizQuestion } from "../data/quiz-questions";
-import { cardNumber, traitsFor } from "../data/ranks";
+import { cardNumber, traitsFor, rankFor } from "../data/ranks";
 import { useIdentity } from "../stores/identity";
-import { rankFor } from "../data/ranks";
 import { ArrowRight, RotateCw } from "lucide-react";
 
 export const Route = createFileRoute("/quiz/")({
@@ -33,8 +32,7 @@ function QuizPage() {
     if (idx + 1 < questions.length) {
       setIdx(idx + 1);
     } else {
-      // finalize
-      const raw = next.reduce((a, b) => a + b, 0); // max 100
+      const raw = next.reduce((a, b) => a + b, 0);
       const finalScore = Math.max(0, Math.min(100, raw));
       const sum = next.reduce((a, b, i) => a + b * (i + 1), 0);
       const traits = traitsFor(finalScore, sum + seed);
@@ -53,63 +51,61 @@ function QuizPage() {
     }
   }
 
-  function restart() {
-    setIdx(0);
-    setAnswers([]);
-  }
+  function restart() { setIdx(0); setAnswers([]); }
 
   const q = questions[idx];
   const progress = ((idx) / questions.length) * 100;
 
   return (
-    <div className="min-h-[calc(100vh-100px)] px-6 py-12">
-      <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-[11px] uppercase tracking-[0.3em] text-zinc-500 font-medium">
-            Question {idx + 1} <span className="text-zinc-700">/ {questions.length}</span>
+    <div className="min-h-[calc(100vh-120px)] px-6 py-12">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/50">
+            <span className="text-[#d4ff00]">Q.{String(idx + 1).padStart(2, "0")}</span>
+            <span className="text-white/30"> / {String(questions.length).padStart(2, "0")}</span>
           </p>
           <button
             onClick={restart}
-            className="text-xs text-zinc-500 hover:text-zinc-300 flex items-center gap-1"
+            className="font-mono text-[10px] uppercase tracking-widest text-white/40 hover:text-white flex items-center gap-1.5"
           >
             <RotateCw className="size-3" /> Restart
           </button>
         </div>
 
-        <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden mb-12">
+        <div className="h-[3px] w-full bg-white/5 overflow-hidden mb-16">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className="h-full bg-gradient-to-r from-brand-purple to-brand-cyan"
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="h-full bg-[#d4ff00] shadow-[0_0_10px_#d4ff00]"
           />
         </div>
 
         <AnimatePresence mode="wait">
           <motion.div
             key={q.id}
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ opacity: 0, y: -24 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="text-[11px] uppercase tracking-widest text-brand-purple font-medium">{q.category}</span>
-            <h2 className="font-display text-3xl sm:text-5xl font-semibold text-zinc-50 leading-[1.1] tracking-tight mt-3">
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#d4ff00] font-bold mb-4">{q.category}</p>
+            <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[0.95] tracking-tighter uppercase">
               {q.scenario}
             </h2>
 
-            <div className="grid gap-3 mt-10">
+            <div className="grid gap-3 mt-12">
               {q.options.map((opt) => (
                 <button
                   key={opt.letter}
                   onClick={() => answer(opt.score)}
-                  className="group text-left p-5 rounded-2xl glass ring-1 ring-white/8 hover:ring-brand-purple/40 hover:bg-white/[0.04] transition-all flex items-center gap-4"
+                  className="group text-left p-5 border border-white/10 bg-[#0a0a0c] hover:border-[#d4ff00] hover:bg-[#0f0f10] transition-all flex items-center gap-5"
                 >
-                  <div className="size-10 shrink-0 rounded-xl bg-white/5 ring-1 ring-white/10 grid place-items-center font-display text-base font-semibold text-zinc-400 group-hover:text-brand-purple group-hover:ring-brand-purple/40 transition">
+                  <div className="size-12 shrink-0 border border-white/15 grid place-items-center font-display text-lg font-extrabold text-white/50 group-hover:text-[#d4ff00] group-hover:border-[#d4ff00] transition">
                     {opt.letter}
                   </div>
-                  <p className="flex-1 text-zinc-200 text-base leading-snug">{opt.text}</p>
-                  <ArrowRight className="size-4 text-zinc-600 group-hover:text-zinc-50 group-hover:translate-x-0.5 transition shrink-0" />
+                  <p className="flex-1 text-white text-base sm:text-lg leading-snug">{opt.text}</p>
+                  <ArrowRight className="size-4 text-white/30 group-hover:text-[#d4ff00] group-hover:translate-x-0.5 transition shrink-0" />
                 </button>
               ))}
             </div>
