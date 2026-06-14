@@ -1,58 +1,88 @@
-## HaveRizz.com — Build Plan
+# HaveRizz — Kinetic Brutalism Redesign
 
-A premium dark-aesthetic Gen-Z entertainment webapp. Frontend-only v1 (localStorage for persistence). Visual system locked to the selected "Asymmetric Split-Hero Identity" direction: `#0A0A0A` background, electric purple/cyan/magenta/gold, Space Grotesk display, Inter body, glassmorphic cards with holographic gradient edges.
+Full visual overhaul to match the selected "Kinetic Brutalism" direction. Tokens copied verbatim from the prototype; same composition logic extended across every route.
 
-### Routes (TanStack file-based)
+## Design system (locked)
 
-```
-/                  Homepage (split hero + stats + carousel + features + floating coffee btn)
-/quiz              Do I Have Rizz quiz (10 random Qs, animated, scored)
-/quiz/result       Animated reveal + shareable Identity Card
-/generator         Best Rizz Generator (15 categories, copy/share/react)
-/astro             AstroRizz (sign × sign compatibility, 144 combos)
-/horoscope         Daily Rizz Horoscope (zodiac picker → deterministic daily output)
-/arena             Rizz Battle Arena (submit + vote + Hot/New/Top/Controversial + leaderboard)
-/rate              Rate My Rizz (submit pickup line/text, community votes Smooth/Mid/Cringe)
-```
+- **Background:** `#050505` ink
+- **Surface:** `#0F0F10` / glass `rgba(255,255,255,0.04)` w/ 24px blur + 160% saturate
+- **Accent (primary):** `#D4FF00` acid lime (CTAs, highlights, glow)
+- **Accent (secondary):** `#FF2E93` magenta + `#22D3EE` cyan (sparingly, for chips/data viz)
+- **Text:** `#FFFFFF` / muted `rgba(255,255,255,0.6)` / faint `0.4`
+- **Type:** Syne 700/800 (display, oversized, uppercase, tracking-tighter) + Instrument Serif italic (accent word) + Plus Jakarta Sans (body) + Space Grotesk (mono-ish UI labels)
+- **Borders:** 1px `rgba(255,255,255,0.1)` — never bare `border`
+- **Effects:** SVG grain overlay (mix-blend-overlay, 10% opacity), liquid blob gradients (blur 120px), holo-edge on cards, skew transforms on buttons (`-skew-x-12`)
 
-A shared layout has the glass nav + floating Buy Me a Coffee modal trigger.
+All tokens land in `src/styles.css` under `@theme`. Old purple/cyan/magenta/gold brand tokens get replaced.
 
-### Feature scope
+## Motion system (scroll vibe = 5)
 
-1. **Homepage** — exact composition from the chosen direction: sticky glass pill nav, split hero (headline + CTAs left, live Identity Card mockup right), animated stat triplet, infinite marquee live leaderboard, 3-card feature grid, floating coffee button, footer.
-2. **Do I Have Rizz Quiz** — pool of ~30+ scenario questions seeded from Feature 1 PDF, randomly pick 10 per session, A/B/C/D with hidden 10/7/4/1 scoring, animated progress bar, sound-free confetti reveal at the end.
-3. **Rizz Identity Card** — generated from quiz result: score 0–100, rank (Rookie → Ultimate Master), 1–3 personality traits derived from answer pattern, rarity tier weighted by score, card number `RZ-XXXXX`, holographic gradient edge. Share buttons: copy link, download PNG (`html-to-image`), tweet/WhatsApp intent URLs. Saved to localStorage so users can revisit.
-4. **Best Rizz Generator** — all 15 categories × 20 lines parsed from Feature 2 PDF into a typed dataset. Category picker rail, card stack with copy + share + emoji reactions (count persisted in localStorage).
-5. **AstroRizz** — 144-combo dataset (12 × 12) seeded from Feature 2.1 PDF. Two zodiac wheel pickers → animated compatibility ring + opener, strategy, green/red flags, best time to text, flirting style. Result is shareable.
-6. **Daily Horoscope** — port the Python generator deterministically to TypeScript (same SHA-256-based seeding, same trait/forecast/icebreaker pools). User picks sign → today's score, lucky emoji, lucky time window, confidence tier, flirting forecast, best icebreaker. New every day, same per day per sign.
-7. **Rizz Battle Arena** — localStorage-backed Reddit-style feed. Anonymous username generator (adjective + noun). Submit a line + category. Fire/Fizz voting. Hot/New/Top/Controversial sort. Today/Week/Month/All-Time leaderboard tabs. Seeded with ~20 example posts so it feels alive on first load. (Note flagged below.)
-8. **Rate My Rizz** — submit pickup line or text screenshot caption → community votes Smooth/Mid/Cringe with running tallies. Same localStorage backend as Arena.
-9. **Buy Me a Coffee** — floating glass button on every page → modal with ₹49 / ₹99 / ₹199 / ₹499 + custom amount. Razorpay integration stubbed with a "Coming soon" toast (real Razorpay needs Cloud + your key — call this out for phase 2).
-10. **404 + error boundaries** wired on `__root.tsx` and every route with a loader.
+Add Lenis smooth-scroll + a `useScroll`-based system on top of existing Framer Motion:
 
-### Tech & libraries
+- **Lenis** smooth scroll wrapper at root
+- **Hero:** parallax on headline + Identity Card (Y translate, scale, rotate on scroll), mouse-tilt 3D on card (rotateX/Y via mouse position), letter-by-letter Syne reveal on mount
+- **Pinned sections:** sticky scrubbed sections for "How it works" (3 steps revealed on scroll) and "Identity Card showcase" (card rotates + scales as you scroll past)
+- **Marquee:** diagonal infinite ticker of recent rizz scores crossing hero
+- **Cursor:** gooey magenta blob follows cursor (desktop only, mix-blend-difference)
+- **Magnetic buttons:** primary CTAs pull toward cursor within 80px
+- **Grain:** animated SVG noise overlay (fixed, 8% opacity)
+- **Reveal-on-scroll:** every section uses `whileInView` with stagger
+- **Blob backdrop:** two large blurred radial blobs (lime + cyan) that drift via `animate-mesh`
 
-- TanStack Start (existing). File-based routes under `src/routes/`.
-- Tailwind v4 tokens in `src/styles.css` ported verbatim from the chosen direction (`--color-brand-purple`, `--color-brand-cyan`, `--color-brand-magenta`, `--color-brand-gold`, mesh-drift + marquee keyframes, `.glass` + `.holo-edge` utilities).
-- Fonts loaded via `<link>` in `__root.tsx` (Space Grotesk + Inter).
-- Add: `framer-motion` (page transitions, card reveals, counter animation), `html-to-image` (PNG export of Identity Card), `canvas-confetti` (result reveal), `zustand` (Arena + reactions state with localStorage middleware).
-- Datasets live in `src/data/`: `quiz-questions.ts`, `rizz-lines.ts`, `astro-combos.ts`, `horoscope-engine.ts`.
-- Shared UI primitives: `GlassNav`, `MeshBackdrop`, `MagneticButton`, `IdentityCard`, `ZodiacPicker`, `CoffeeFab` + `CoffeeModal`.
+## Files to change
 
-### Limitations / phase 2 (called out upfront)
+### Tokens & shell
+- `src/styles.css` — replace palette tokens, swap fonts, add `@utility skew-cta`, `@utility holo-edge` (lime), `@utility grain`, add new keyframes (`marquee-diag`, `letter-rise`)
+- `src/routes/__root.tsx` — swap Google Fonts link to **Syne + Instrument Serif + Plus Jakarta Sans + Space Grotesk**; add `<LenisProvider>` wrapper, `<Grain>`, `<CursorBlob>` (desktop only)
+- `package.json` — add `lenis` and `@studio-freight/react-lenis` (or `lenis/react`)
 
-- **No real auth or cross-device persistence** — Arena posts, votes, reactions, and saved Identity Cards live in `localStorage`. Cards survive on the device that made them; voting is per-browser only. To move to a real shared community + Google/anonymous login + cross-device cards, we flip on Lovable Cloud (Postgres + auth + RLS) — say the word and I'll wire it.
-- **Razorpay** — UI + modal built, payment call stubbed. Going live needs Lovable Cloud (to hold the order-creation server function) + your Razorpay Key ID and Key Secret.
-- **Quiz question pool** — the Feature 1 PDF has 500+ planned questions but ~70 survived the 50-page parse limit. I'll seed with what's parsed (~30 clean ones across categories) plus 20 originals in the same tone; we expand the pool later by sharing the rest as JSON.
-- **AstroRizz** — same situation: the parse covered ~20 of 144 combos cleanly. I'll generate the remaining combos algorithmically using the same field shape (compatibility %, opener, strategy, flags, best time, flirting style) keyed off zodiac element compatibility rules, so all 144 work on day one and we swap in your authored copy as you provide it.
+### New shared components
+- `src/components/Lenis.tsx` — smooth-scroll provider
+- `src/components/CursorBlob.tsx` — gooey magenta blob, mix-blend-difference
+- `src/components/Grain.tsx` — fixed SVG noise overlay
+- `src/components/MagneticButton.tsx` — cursor-magnetic wrapper
+- `src/components/SkewButton.tsx` — brutalist skewed CTA (primary lime / outline)
+- `src/components/SectionLabel.tsx` — magazine-style `01 — QUIZ` numbered labels
+- `src/components/Marquee.tsx` — straight + diagonal variants
+- `src/components/RevealText.tsx` — letter/word reveal on scroll
+- `src/components/TiltCard.tsx` — mouse-tilt 3D wrapper (perspective + rotateX/Y)
 
-### Build order
+### Updated components
+- `src/components/GlassNav.tsx` — brutalist pill: skewed CTA, lime status dot, Syne brand mark `HAVE/RIZZ`, monospace version tag
+- `src/components/IdentityCard.tsx` — rebuild to match prototype: 1.6:1 ratio, lime progress bar with glow, grain overlay, "RIZZ ID-###", "Charisma Level" bar, big tabular score, holo edge, mouse-tilt
+- `src/components/MeshBackdrop.tsx` — swap to lime + cyan blobs, slower drift
+- `src/components/CoffeeFab.tsx` — restyle as brutalist skewed lime chip
 
-1. Design tokens + fonts + global layout (`__root.tsx`, `MeshBackdrop`, `GlassNav`, `CoffeeFab`).
-2. Homepage (`/`) end-to-end matching the chosen direction.
-3. Quiz flow + Identity Card + share.
-4. Generator + AstroRizz + Horoscope.
-5. Arena + Rate My Rizz with seeded content.
-6. Polish: framer-motion page transitions, magnetic CTA, scroll-triggered counters, mobile pass.
+### Routes (all get the new system)
+- `src/routes/index.tsx` — full rebuild:
+  1. Hero (prototype composition, scaled to viewport, with parallax + tilt card + floating "Pulse" widget)
+  2. Diagonal marquee of top scores
+  3. Pinned "How it works" — 3 steps scrubbed on scroll
+  4. Broken-grid features (6 tiles: Quiz, Generator, AstroRizz, Horoscope, Arena, Rate) with off-grid offsets, mixed sizes, hover lime borders
+  5. Identity Card showcase — sticky card, copy reveals beside it
+  6. Stats band — brutalist concrete blocks
+  7. Final CTA — oversized Syne headline + skewed lime CTA
+  8. Footer — minimal, mono labels
+- `src/routes/quiz.index.tsx` — restyle: oversized Syne question, lime progress bar with glow, skewed option cards with hover lime border, magazine question counter
+- `src/routes/quiz.result.tsx` — restyle: hero reveal of new IdentityCard, lime CTA row, share buttons
+- `src/routes/generator.tsx` — brutalist filter pills, lime "Generate" SkewButton, line cards as glass slabs with grain
+- `src/routes/astro.tsx` — zodiac pickers as brutalist grid, compatibility ring with lime stroke
+- `src/routes/horoscope.tsx` — editorial layout: oversized sign name, Instrument Serif italic accents, glass info cards
+- `src/routes/arena.tsx` — Reddit feed restyled as brutalist post slabs, lime vote button, sort tabs as skewed pills
+- `src/routes/rate.tsx` — vote buttons (Smooth/Mid/Cringe) as oversized skewed brutalist buttons with haptic-style feedback
 
-After approval I'll start at step 1 and ship through to step 6 in one continuous build.
+## Out of scope (this pass)
+
+- No backend changes (still frontend-only, localStorage)
+- No new content/data (keep existing quiz questions, lines, combos, horoscope engine)
+- No real 3D (Three.js) — "3D" achieved via CSS perspective + mouse-tilt + parallax depth layers (keeps it fast, no new heavy deps)
+- No mobile cursor blob (desktop only via `matchMedia('(pointer:fine)')`)
+
+## Technical notes
+
+- Lenis is the only new runtime dep; everything else uses existing Framer Motion + Tailwind v4
+- All scroll effects use `useScroll` + `useTransform` so they're GPU-friendly
+- Grain SVG is inlined (no external request)
+- Skewed buttons keep their text un-skewed via inner `<span class="inline-block skew-x-12">`
+- Identity Card tilt uses `transform-style: preserve-3d` + `perspective: 1000px` on parent
+- Reduced-motion: respect `prefers-reduced-motion` — disable Lenis, parallax, cursor blob, tilt; keep static layout
