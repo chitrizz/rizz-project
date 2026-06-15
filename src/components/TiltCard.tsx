@@ -1,5 +1,5 @@
-import { useRef, type ReactNode, type MouseEvent } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef, type ReactNode, type MouseEvent, type CSSProperties } from "react";
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from "framer-motion";
 
 interface Props {
   children: ReactNode;
@@ -15,6 +15,9 @@ export function TiltCard({ children, className, max = 12 }: Props) {
   const sy = useSpring(my, { stiffness: 200, damping: 22 });
   const rx = useTransform(sy, [0, 1], [max, -max]);
   const ry = useTransform(sx, [0, 1], [-max, max]);
+  const mxPct = useTransform(sx, (v) => `${v * 100}%`);
+  const myPct = useTransform(sy, (v) => `${v * 100}%`);
+  const styleVars = useMotionTemplate`--mx:${mxPct}; --my:${myPct};` as unknown as CSSProperties;
 
   function onMove(e: MouseEvent<HTMLDivElement>) {
     const el = ref.current;
@@ -28,7 +31,7 @@ export function TiltCard({ children, className, max = 12 }: Props) {
   return (
     <div ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} className={className} style={{ perspective: 1100 }}>
       <motion.div
-        style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
+        style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d", ...styleVars }}
         className="will-change-transform"
       >
         {children}

@@ -1,88 +1,85 @@
-# HaveRizz — Kinetic Brutalism Redesign
+# Polish Pass: Scroll, Grid, Card, Quiz, Nav, ShineBorder
 
-Full visual overhaul to match the selected "Kinetic Brutalism" direction. Tokens copied verbatim from the prototype; same composition logic extended across every route.
+## 1. Fix "Three steps. Zero fumble." horizontal scroll
+Problem: 3rd card never reaches view because the horizontal `x` translate is `-66.6%` (assumes 3×100vw cards). Cards are actually `55vw` wide with a header column above, so the track is too short and the section height (`260vh`) doesn't give enough scroll runway for card 3.
 
-## Design system (locked)
+Fix in `src/routes/index.tsx` `PinnedHowItWorks`:
+- Measure track properly: compute travel as `-(trackWidth - viewportWidth)` using a ref + `useTransform` driven by measured value (or simpler: set track to `width: max-content`, cards to fixed widths, and translate `x` from `0` to `calc(-100% + 100vw)` via a CSS var bound to scrollYProgress).
+- Bump container to `h-[320vh]` so the last card fully lands.
+- Use `offset: ["start start", "end end"]` (already set) but widen `useTransform` range with clamping and add a small dwell at the end (`[0, 0.9, 1]` → `["0%", endX, endX]`).
+- Add subtle per-card opacity/scale tied to in-view progress for polish.
 
-- **Background:** `#050505` ink
-- **Surface:** `#0F0F10` / glass `rgba(255,255,255,0.04)` w/ 24px blur + 160% saturate
-- **Accent (primary):** `#D4FF00` acid lime (CTAs, highlights, glow)
-- **Accent (secondary):** `#FF2E93` magenta + `#22D3EE` cyan (sparingly, for chips/data viz)
-- **Text:** `#FFFFFF` / muted `rgba(255,255,255,0.6)` / faint `0.4`
-- **Type:** Syne 700/800 (display, oversized, uppercase, tracking-tighter) + Instrument Serif italic (accent word) + Plus Jakarta Sans (body) + Space Grotesk (mono-ish UI labels)
-- **Borders:** 1px `rgba(255,255,255,0.1)` — never bare `border`
-- **Effects:** SVG grain overlay (mix-blend-overlay, 10% opacity), liquid blob gradients (blur 120px), holo-edge on cards, skew transforms on buttons (`-skew-x-12`)
+## 2. Fix "Six weapons. One mission." Arsenal grid
+Problems (per screenshot): names like ASTRORIZZ and HOROSCOPE overflow card width; staggered `mt-*` offsets create awkward gaps; uneven row heights.
 
-All tokens land in `src/styles.css` under `@theme`. Old purple/cyan/magenta/gold brand tokens get replaced.
+Fix in `src/routes/index.tsx` FEATURES section:
+- Remove per-card `off` vertical offsets — keep clean 4-col grid (still "broken" via `col-span-2` on Quiz/Generator/Arena/Rate, square cards for AstroRizz/Horoscope).
+- Reduce title size on single-column cards: use responsive clamp `text-[clamp(22px,2.4vw,38px)]` and add `break-words leading-[0.9]`.
+- Add `min-w-0` to card and `truncate`-safe wrapping; ensure consistent `min-h-[240px]` and `h-full` so cards align.
+- Tighten gap to `gap-4` and standardize padding.
 
-## Motion system (scroll vibe = 5)
+## 3. Premium holographic Identity Card
+Rebuild `src/components/IdentityCard.tsx` visuals (logic unchanged):
+- Conic-gradient holographic border (rotating) using a pseudo-element.
+- Iridescent inner sheen: layered radial gradients (lime/cyan/magenta) with `mix-blend-screen` plus a moving diagonal sheen (`background-position` animation).
+- Chromatic chip / barcode strip mock at the bottom (SVG lines), plus a small "verified" hologram square (mini conic gradient).
+- Stronger holo edge (replace `holo-edge` after-bar with full perimeter conic mask).
+- Tilt-reactive specular highlight: a CSS variable updated on mouse-move inside `TiltCard` (extend `TiltCard.tsx` to expose `--mx/--my`) drives a radial gradient overlay that follows the cursor.
+- Increase shadow, add 1px inner highlight (`box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)`), refine typography spacing.
 
-Add Lenis smooth-scroll + a `useScroll`-based system on top of existing Framer Motion:
+Add a new `holo-card` utility in `src/styles.css` for the conic border + sheen keyframes (`holo-spin`, `sheen-pan`).
 
-- **Lenis** smooth scroll wrapper at root
-- **Hero:** parallax on headline + Identity Card (Y translate, scale, rotate on scroll), mouse-tilt 3D on card (rotateX/Y via mouse position), letter-by-letter Syne reveal on mount
-- **Pinned sections:** sticky scrubbed sections for "How it works" (3 steps revealed on scroll) and "Identity Card showcase" (card rotates + scales as you scroll past)
-- **Marquee:** diagonal infinite ticker of recent rizz scores crossing hero
-- **Cursor:** gooey magenta blob follows cursor (desktop only, mix-blend-difference)
-- **Magnetic buttons:** primary CTAs pull toward cursor within 80px
-- **Grain:** animated SVG noise overlay (fixed, 8% opacity)
-- **Reveal-on-scroll:** every section uses `whileInView` with stagger
-- **Blob backdrop:** two large blurred radial blobs (lime + cyan) that drift via `animate-mesh`
+## 4. Readable quiz question typography
+In `src/routes/quiz.index.tsx`:
+- Swap question heading from Syne extrabold uppercase (`font-display ... uppercase tracking-tighter`) to a readable mixed-case treatment: `font-sans font-semibold text-2xl sm:text-3xl lg:text-4xl leading-[1.15] tracking-tight normal-case text-white`.
+- Add a smaller serif accent (Instrument Serif italic) for the scenario lead-in if it starts with a quote.
+- Increase line-height on answers to `leading-relaxed` and bump answer text size on mobile.
 
-## Files to change
+## 5. Nav bar: liquid glass + better hierarchy
+Rework `src/components/GlassNav.tsx`:
+- Pill container: thicker blur (`backdrop-blur-2xl`), layered translucent gradient background, inner highlight border (`shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]`), subtle outer glow.
+- Add an animated "liquid" specular streak across the pill (CSS keyframe — a slow diagonal gradient sweep at very low opacity).
+- Active link: pill-shaped lime underline that animates with `layoutId` (framer-motion) so it slides between items.
+- Hover: each link gets a small glass chip background that fades in.
+- Mobile menu: same liquid glass treatment, larger tap targets.
+- Wrap the whole nav pill with the new `ShineBorder` for the rotating gradient outline.
 
-### Tokens & shell
-- `src/styles.css` — replace palette tokens, swap fonts, add `@utility skew-cta`, `@utility holo-edge` (lime), `@utility grain`, add new keyframes (`marquee-diag`, `letter-rise`)
-- `src/routes/__root.tsx` — swap Google Fonts link to **Syne + Instrument Serif + Plus Jakarta Sans + Space Grotesk**; add `<LenisProvider>` wrapper, `<Grain>`, `<CursorBlob>` (desktop only)
-- `package.json` — add `lenis` and `@studio-freight/react-lenis` (or `lenis/react`)
+## 6. ShineBorder primitive + global usage
+Create `src/components/ui/shine-border.tsx`:
+- Tailwind v4 compatible (no `tailwind.config.js`). Adapt the provided component to use inline-style gradient + a `@keyframes shine` defined in `src/styles.css`:
+  ```css
+  @keyframes shine {
+    0%   { background-position: 0% 0%; }
+    50%  { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+  }
+  ```
+  Add an `animate-shine` class via `@utility`.
+- Component renders an absolutely-positioned gradient layer behind `children` masked with `padding-box`/`content-box` trick so only the border shows the moving gradient. Accepts `borderRadius`, `borderWidth`, `duration`, `color` (string or string[]).
 
-### New shared components
-- `src/components/Lenis.tsx` — smooth-scroll provider
-- `src/components/CursorBlob.tsx` — gooey magenta blob, mix-blend-difference
-- `src/components/Grain.tsx` — fixed SVG noise overlay
-- `src/components/MagneticButton.tsx` — cursor-magnetic wrapper
-- `src/components/SkewButton.tsx` — brutalist skewed CTA (primary lime / outline)
-- `src/components/SectionLabel.tsx` — magazine-style `01 — QUIZ` numbered labels
-- `src/components/Marquee.tsx` — straight + diagonal variants
-- `src/components/RevealText.tsx` — letter/word reveal on scroll
-- `src/components/TiltCard.tsx` — mouse-tilt 3D wrapper (perspective + rotateX/Y)
-
-### Updated components
-- `src/components/GlassNav.tsx` — brutalist pill: skewed CTA, lime status dot, Syne brand mark `HAVE/RIZZ`, monospace version tag
-- `src/components/IdentityCard.tsx` — rebuild to match prototype: 1.6:1 ratio, lime progress bar with glow, grain overlay, "RIZZ ID-###", "Charisma Level" bar, big tabular score, holo edge, mouse-tilt
-- `src/components/MeshBackdrop.tsx` — swap to lime + cyan blobs, slower drift
-- `src/components/CoffeeFab.tsx` — restyle as brutalist skewed lime chip
-
-### Routes (all get the new system)
-- `src/routes/index.tsx` — full rebuild:
-  1. Hero (prototype composition, scaled to viewport, with parallax + tilt card + floating "Pulse" widget)
-  2. Diagonal marquee of top scores
-  3. Pinned "How it works" — 3 steps scrubbed on scroll
-  4. Broken-grid features (6 tiles: Quiz, Generator, AstroRizz, Horoscope, Arena, Rate) with off-grid offsets, mixed sizes, hover lime borders
-  5. Identity Card showcase — sticky card, copy reveals beside it
-  6. Stats band — brutalist concrete blocks
-  7. Final CTA — oversized Syne headline + skewed lime CTA
-  8. Footer — minimal, mono labels
-- `src/routes/quiz.index.tsx` — restyle: oversized Syne question, lime progress bar with glow, skewed option cards with hover lime border, magazine question counter
-- `src/routes/quiz.result.tsx` — restyle: hero reveal of new IdentityCard, lime CTA row, share buttons
-- `src/routes/generator.tsx` — brutalist filter pills, lime "Generate" SkewButton, line cards as glass slabs with grain
-- `src/routes/astro.tsx` — zodiac pickers as brutalist grid, compatibility ring with lime stroke
-- `src/routes/horoscope.tsx` — editorial layout: oversized sign name, Instrument Serif italic accents, glass info cards
-- `src/routes/arena.tsx` — Reddit feed restyled as brutalist post slabs, lime vote button, sort tabs as skewed pills
-- `src/routes/rate.tsx` — vote buttons (Smooth/Mid/Cringe) as oversized skewed brutalist buttons with haptic-style feedback
-
-## Out of scope (this pass)
-
-- No backend changes (still frontend-only, localStorage)
-- No new content/data (keep existing quiz questions, lines, combos, horoscope engine)
-- No real 3D (Three.js) — "3D" achieved via CSS perspective + mouse-tilt + parallax depth layers (keeps it fast, no new heavy deps)
-- No mobile cursor blob (desktop only via `matchMedia('(pointer:fine)')`)
+Apply ShineBorder to high-impact surfaces only (avoid visual noise):
+- Nav pill (`GlassNav`)
+- Identity Card outer frame
+- Feature cards in Arsenal grid (subtle, slow, low-contrast colors `["#d4ff00","#22d3ee","#ff2e93"]`)
+- Final CTA section frame
+- Quiz answer buttons on hover (optional: only the currently-hovered one)
 
 ## Technical notes
+- Tailwind v4: no `tailwind.config.js` edits — keyframes/utilities go in `src/styles.css`.
+- Keep all data, routes, stores untouched. Pure UI work.
+- Respect `prefers-reduced-motion` (already global) — shine and holo animations inherit the override.
+- No new deps required.
 
-- Lenis is the only new runtime dep; everything else uses existing Framer Motion + Tailwind v4
-- All scroll effects use `useScroll` + `useTransform` so they're GPU-friendly
-- Grain SVG is inlined (no external request)
-- Skewed buttons keep their text un-skewed via inner `<span class="inline-block skew-x-12">`
-- Identity Card tilt uses `transform-style: preserve-3d` + `perspective: 1000px` on parent
-- Reduced-motion: respect `prefers-reduced-motion` — disable Lenis, parallax, cursor blob, tilt; keep static layout
+## Files touched
+- `src/routes/index.tsx` (PinnedHowItWorks, FEATURES grid)
+- `src/components/IdentityCard.tsx`
+- `src/components/TiltCard.tsx` (expose mouse coords as CSS vars)
+- `src/components/GlassNav.tsx`
+- `src/routes/quiz.index.tsx`
+- `src/styles.css` (shine keyframe, holo utilities, animate-shine)
+- `src/components/ui/shine-border.tsx` (new)
+
+## Out of scope
+- Backend, data, route changes
+- Replacing fonts
+- New pages or features

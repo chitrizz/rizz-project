@@ -56,6 +56,9 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-pulse-soft: pulse-soft 3s ease-in-out infinite;
   --animate-grain: grain-shift 8s steps(8) infinite;
+  --animate-holo-spin: holo-spin 6s linear infinite;
+  --animate-sheen-pan: sheen-pan 5s linear infinite;
+  --animate-liquid-sweep: liquid-sweep 9s linear infinite;
 
   @keyframes mesh-drift {
     0%   { transform: translate(0, 0) scale(1); }
@@ -81,6 +84,22 @@
     50%  { transform: translate(3%, -2%); }
     75%  { transform: translate(-2%, -4%); }
     100% { transform: translate(0, 0); }
+  }
+  @keyframes shine {
+    0%   { background-position: 0% 0%; }
+    50%  { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+  }
+  @keyframes holo-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes sheen-pan {
+    0%   { background-position: -150% 0; }
+    100% { background-position: 250% 0; }
+  }
+  @keyframes liquid-sweep {
+    0%   { transform: translateX(-120%) skewX(-18deg); }
+    100% { transform: translateX(220%) skewX(-18deg); }
   }
 }
 
@@ -170,6 +189,39 @@
 }
 @utility grain-bg {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+@utility animate-shine {
+  animation: shine var(--duration, 14s) infinite linear;
+}
+@utility holo-frame {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(from 0deg, #d4ff00, #22d3ee, #ff2e93, #ffd400, #d4ff00);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    animation: holo-spin 8s linear infinite;
+    pointer-events: none;
+  }
+}
+@utility holo-sheen {
+  background:
+    linear-gradient(115deg,
+      rgba(255,255,255,0) 30%,
+      rgba(255,255,255,0.18) 45%,
+      rgba(212,255,0,0.25) 50%,
+      rgba(34,211,238,0.22) 55%,
+      rgba(255,46,147,0.22) 60%,
+      rgba(255,255,255,0) 75%)
+      0 0 / 250% 100% no-repeat;
+  animation: sheen-pan 6s linear infinite;
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
