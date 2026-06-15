@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRate, type RateVote } from "../stores/rate";
-import { generateAnonName } from "../lib/anon-name";
+import { getAuthorName } from "../lib/anon-name";
 import { SectionLabel } from "../components/SectionLabel";
 import { SkewButton } from "../components/SkewButton";
 import { Send, Plus, X } from "lucide-react";
@@ -111,7 +111,7 @@ function RatePage() {
               <p className="text-sm text-white/60 mt-2">Post anonymously. Take the L gracefully.</p>
               <SubmitForm
                 onSubmit={(type, body) => {
-                  add({ author: generateAnonName(), type, body });
+                  add({ author: getAuthorName(), type, body });
                   toast.success("Posted. May the votes be ever in your favor.");
                   setOpen(false);
                 }}

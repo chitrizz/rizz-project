@@ -13,3 +13,13 @@ export function generateAnonName(): string {
   const num = Math.floor(Math.random() * 900 + 100);
   return `${a}${n}${num}`;
 }
+
+import { useAuth } from "../stores/auth";
+
+export function getAuthorName(): string {
+  const { profile } = useAuth.getState();
+  if (profile?.username) {
+    return profile.username;
+  }
+  return generateAnonName();
+}

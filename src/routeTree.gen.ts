@@ -11,13 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RateRouteImport } from './routes/rate'
 import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as HoroscopeRouteImport } from './routes/horoscope'
 import { Route as GeneratorRouteImport } from './routes/generator'
+import { Route as CompleteProfileRouteImport } from './routes/complete-profile'
 import { Route as AstroRouteImport } from './routes/astro'
 import { Route as ArenaRouteImport } from './routes/arena'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuizIndexRouteImport } from './routes/quiz.index'
 import { Route as QuizResultRouteImport } from './routes/quiz.result'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 
 const RateRoute = RateRouteImport.update({
   id: '/rate',
@@ -29,6 +33,16 @@ const QuizRoute = QuizRouteImport.update({
   path: '/quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HoroscopeRoute = HoroscopeRouteImport.update({
   id: '/horoscope',
   path: '/horoscope',
@@ -37,6 +51,11 @@ const HoroscopeRoute = HoroscopeRouteImport.update({
 const GeneratorRoute = GeneratorRouteImport.update({
   id: '/generator',
   path: '/generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompleteProfileRoute = CompleteProfileRouteImport.update({
+  id: '/complete-profile',
+  path: '/complete-profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AstroRoute = AstroRouteImport.update({
@@ -64,15 +83,24 @@ const QuizResultRoute = QuizResultRouteImport.update({
   path: '/result',
   getParentRoute: () => QuizRoute,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/arena': typeof ArenaRoute
   '/astro': typeof AstroRoute
+  '/complete-profile': typeof CompleteProfileRoute
   '/generator': typeof GeneratorRoute
   '/horoscope': typeof HoroscopeRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/quiz': typeof QuizRouteWithChildren
   '/rate': typeof RateRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/quiz/result': typeof QuizResultRoute
   '/quiz/': typeof QuizIndexRoute
 }
@@ -80,9 +108,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/arena': typeof ArenaRoute
   '/astro': typeof AstroRoute
+  '/complete-profile': typeof CompleteProfileRoute
   '/generator': typeof GeneratorRoute
   '/horoscope': typeof HoroscopeRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/rate': typeof RateRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/quiz/result': typeof QuizResultRoute
   '/quiz': typeof QuizIndexRoute
 }
@@ -91,10 +123,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/arena': typeof ArenaRoute
   '/astro': typeof AstroRoute
+  '/complete-profile': typeof CompleteProfileRoute
   '/generator': typeof GeneratorRoute
   '/horoscope': typeof HoroscopeRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/quiz': typeof QuizRouteWithChildren
   '/rate': typeof RateRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/quiz/result': typeof QuizResultRoute
   '/quiz/': typeof QuizIndexRoute
 }
@@ -104,10 +140,14 @@ export interface FileRouteTypes {
     | '/'
     | '/arena'
     | '/astro'
+    | '/complete-profile'
     | '/generator'
     | '/horoscope'
+    | '/login'
+    | '/profile'
     | '/quiz'
     | '/rate'
+    | '/auth/callback'
     | '/quiz/result'
     | '/quiz/'
   fileRoutesByTo: FileRoutesByTo
@@ -115,9 +155,13 @@ export interface FileRouteTypes {
     | '/'
     | '/arena'
     | '/astro'
+    | '/complete-profile'
     | '/generator'
     | '/horoscope'
+    | '/login'
+    | '/profile'
     | '/rate'
+    | '/auth/callback'
     | '/quiz/result'
     | '/quiz'
   id:
@@ -125,10 +169,14 @@ export interface FileRouteTypes {
     | '/'
     | '/arena'
     | '/astro'
+    | '/complete-profile'
     | '/generator'
     | '/horoscope'
+    | '/login'
+    | '/profile'
     | '/quiz'
     | '/rate'
+    | '/auth/callback'
     | '/quiz/result'
     | '/quiz/'
   fileRoutesById: FileRoutesById
@@ -137,10 +185,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArenaRoute: typeof ArenaRoute
   AstroRoute: typeof AstroRoute
+  CompleteProfileRoute: typeof CompleteProfileRoute
   GeneratorRoute: typeof GeneratorRoute
   HoroscopeRoute: typeof HoroscopeRoute
+  LoginRoute: typeof LoginRoute
+  ProfileRoute: typeof ProfileRoute
   QuizRoute: typeof QuizRouteWithChildren
   RateRoute: typeof RateRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -159,6 +211,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuizRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/horoscope': {
       id: '/horoscope'
       path: '/horoscope'
@@ -171,6 +237,13 @@ declare module '@tanstack/react-router' {
       path: '/generator'
       fullPath: '/generator'
       preLoaderRoute: typeof GeneratorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/complete-profile': {
+      id: '/complete-profile'
+      path: '/complete-profile'
+      fullPath: '/complete-profile'
+      preLoaderRoute: typeof CompleteProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/astro': {
@@ -208,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuizResultRouteImport
       parentRoute: typeof QuizRoute
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -227,11 +307,25 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArenaRoute: ArenaRoute,
   AstroRoute: AstroRoute,
+  CompleteProfileRoute: CompleteProfileRoute,
   GeneratorRoute: GeneratorRoute,
   HoroscopeRoute: HoroscopeRoute,
+  LoginRoute: LoginRoute,
+  ProfileRoute: ProfileRoute,
   QuizRoute: QuizRouteWithChildren,
   RateRoute: RateRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

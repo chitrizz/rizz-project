@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useArena, type ArenaPost } from "../stores/arena";
-import { generateAnonName } from "../lib/anon-name";
+import { getAuthorName } from "../lib/anon-name";
 import { RIZZ_CATEGORIES } from "../data/rizz-lines";
 import { SectionLabel } from "../components/SectionLabel";
 import { SkewButton } from "../components/SkewButton";
@@ -163,7 +163,7 @@ function ArenaPage() {
         open={openSubmit}
         onClose={() => setOpenSubmit(false)}
         onSubmit={(category, line) => {
-          addPost({ author: generateAnonName(), category, line });
+          addPost({ author: getAuthorName(), category, line });
           toast.success("Dropped in the Arena. Good luck.");
           setOpenSubmit(false);
         }}
