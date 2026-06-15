@@ -1,0 +1,1 @@
+import{i as e}from"./index-B2Ba-132.js";import{t}from"./middleware-Pd0e8Igk.js";var n=e()(t(e=>({latest:null,history:[],save:t=>e(e=>({latest:t,history:[t,...e.history].slice(0,10)})),clear:()=>e({latest:null,history:[]})}),{name:`rizz-identity-v1`}));export{n as t};

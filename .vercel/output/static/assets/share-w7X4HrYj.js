@@ -1,0 +1,1 @@
+function e(e){let t=`https://wa.me/?text=${encodeURIComponent(e)}`;window.open(t,`_blank`,`noopener,noreferrer`)}function t(e){let t=`https://twitter.com/intent/tweet?text=${encodeURIComponent(e)}`;window.open(t,`_blank`,`noopener,noreferrer`)}async function n(e){try{return await navigator.clipboard.writeText(e),!0}catch{return!1}}export{t as n,e as r,n as t};
