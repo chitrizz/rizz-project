@@ -89,8 +89,8 @@ function QuizPage() {
             exit={{ opacity: 0, y: -24 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#d4ff00] font-bold mb-4">{q.category}</p>
-            <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[0.95] tracking-tighter uppercase">
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#d4ff00] font-bold mb-5">{q.category}</p>
+            <h2 className="font-sans font-semibold text-white text-2xl sm:text-3xl lg:text-[40px] leading-[1.2] tracking-tight max-w-3xl">
               {q.scenario}
             </h2>
 
@@ -99,12 +99,12 @@ function QuizPage() {
                 <button
                   key={opt.letter}
                   onClick={() => answer(opt.score)}
-                  className="group text-left p-5 border border-white/10 bg-[#0a0a0c] hover:border-[#d4ff00] hover:bg-[#0f0f10] transition-all flex items-center gap-5"
+                  className="group text-left p-5 border border-white/10 bg-[#0a0a0c] hover:border-[#d4ff00] hover:bg-[#0f0f10] transition-all flex items-center gap-5 rounded-md"
                 >
-                  <div className="size-12 shrink-0 border border-white/15 grid place-items-center font-display text-lg font-extrabold text-white/50 group-hover:text-[#d4ff00] group-hover:border-[#d4ff00] transition">
+                  <div className="size-12 shrink-0 border border-white/15 grid place-items-center font-display text-lg font-extrabold text-white/50 group-hover:text-[#d4ff00] group-hover:border-[#d4ff00] transition rounded-sm">
                     {opt.letter}
                   </div>
-                  <p className="flex-1 text-white text-base sm:text-lg leading-snug">{opt.text}</p>
+                  <p className="flex-1 text-white text-base sm:text-lg leading-relaxed font-sans">{opt.text}</p>
                   <ArrowRight className="size-4 text-white/30 group-hover:text-[#d4ff00] group-hover:translate-x-0.5 transition shrink-0" />
                 </button>
               ))}
