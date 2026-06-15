@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IdentityCard } from "../components/IdentityCard";
 import { SkewButton } from "../components/SkewButton";
 import { Magnetic } from "../components/MagneticButton";
@@ -22,12 +22,12 @@ export const Route = createFileRoute("/")({
 });
 
 const FEATURES = [
-  { to: "/quiz" as const,      num: "01", title: "The Quiz",     desc: "10 scenario questions. One Identity Card. Shareable in seconds.",      tag: "Flagship",     span: "md:col-span-2 md:row-span-2", off: "md:-mt-2" },
-  { to: "/generator" as const, num: "02", title: "Generator",    desc: "15 categories. 300+ curated lines. From Corporate to Dark Humor.",     tag: "300+ lines",   span: "md:col-span-2", off: "md:mt-10" },
-  { to: "/astro" as const,     num: "03", title: "AstroRizz",    desc: "144 zodiac combos. Compatibility, opener, strategy, flags.",           tag: "Cosmic",       span: "", off: "" },
-  { to: "/horoscope" as const, num: "04", title: "Horoscope",    desc: "Daily charisma forecast. Score, lucky time, icebreaker.",              tag: "Daily",        span: "", off: "md:mt-6" },
-  { to: "/arena" as const,     num: "05", title: "Arena",        desc: "Post your best lines. Community fires or fizzes. Climb the ladder.",   tag: "Community",    span: "md:col-span-2", off: "md:-mt-4" },
-  { to: "/rate" as const,      num: "06", title: "Rate My Rizz", desc: "Submit a line. The internet decides: Smooth, Mid, or Cringe.",         tag: "Brutal vote",  span: "md:col-span-2", off: "md:mt-8" },
+  { to: "/quiz" as const,      num: "01", title: "The Quiz",     desc: "10 scenario questions. One Identity Card. Shareable in seconds.",      tag: "Flagship",     span: "md:col-span-2 md:row-span-2", big: true },
+  { to: "/generator" as const, num: "02", title: "Generator",    desc: "15 categories. 300+ curated lines. From Corporate to Dark Humor.",     tag: "300+ lines",   span: "md:col-span-2", big: false },
+  { to: "/astro" as const,     num: "03", title: "AstroRizz",    desc: "144 zodiac combos. Compatibility, opener, strategy, flags.",           tag: "Cosmic",       span: "", big: false },
+  { to: "/horoscope" as const, num: "04", title: "Horoscope",    desc: "Daily charisma forecast. Score, lucky time, icebreaker.",              tag: "Daily",        span: "", big: false },
+  { to: "/arena" as const,     num: "05", title: "Arena",        desc: "Post your best lines. Community fires or fizzes. Climb the ladder.",   tag: "Community",    span: "md:col-span-2", big: false },
+  { to: "/rate" as const,      num: "06", title: "Rate My Rizz", desc: "Submit a line. The internet decides: Smooth, Mid, or Cringe.",         tag: "Brutal vote",  span: "md:col-span-2", big: false },
 ] as const;
 
 const TOP_RIZZ = [
@@ -228,24 +228,32 @@ function Home() {
             <p className="font-mono text-[10px] uppercase tracking-widest text-white/30">v.2.0.4</p>
           </div>
 
-          <div className="grid md:grid-cols-4 grid-flow-row-dense gap-5">
+          <div className="grid md:grid-cols-4 auto-rows-[minmax(220px,auto)] grid-flow-row-dense gap-4">
             {FEATURES.map((f) => (
-              <FadeUp key={f.to} className={`${f.span} ${f.off}`}>
+              <FadeUp key={f.to} className={`${f.span} min-w-0`}>
                 <Link
                   to={f.to}
-                  className="group relative block h-full min-h-[200px] p-7 sm:p-8 border border-white/10 bg-[#0a0a0c] hover:border-[#d4ff00]/60 hover:bg-[#0f0f10] transition-all overflow-hidden"
+                  className="group relative flex flex-col justify-between h-full min-h-[220px] p-7 sm:p-8 border border-white/10 bg-[#0a0a0c] hover:border-[#d4ff00]/60 hover:bg-[#0f0f10] transition-all overflow-hidden rounded-md min-w-0"
                 >
                   <div className="absolute -top-12 -right-12 w-40 h-40 bg-[#d4ff00]/0 group-hover:bg-[#d4ff00]/10 blur-3xl transition-all duration-700" />
-                  <div className="relative flex justify-between items-start mb-12">
+                  <div className="relative flex justify-between items-start gap-3">
                     <span className="font-mono text-xs font-bold tracking-widest text-[#d4ff00]">{f.num}</span>
-                    <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest">{f.tag}</span>
+                    <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest text-right shrink-0">{f.tag}</span>
                   </div>
-                  <h3 className="font-display text-3xl sm:text-4xl font-extrabold uppercase tracking-tighter text-white">
-                    {f.title}
-                  </h3>
-                  <p className="mt-3 text-sm text-white/50 leading-relaxed max-w-sm">{f.desc}</p>
-                  <div className="mt-8 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-white/60 group-hover:text-[#d4ff00] transition">
-                    Open <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  <div className="relative mt-8 min-w-0">
+                    <h3
+                      className={`font-display font-extrabold uppercase tracking-tighter text-white leading-[0.9] break-words ${
+                        f.big
+                          ? "text-[clamp(34px,5vw,68px)]"
+                          : "text-[clamp(22px,2.6vw,38px)]"
+                      }`}
+                    >
+                      {f.title}
+                    </h3>
+                    <p className="mt-3 text-sm text-white/55 leading-relaxed max-w-sm">{f.desc}</p>
+                    <div className="mt-6 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-white/60 group-hover:text-[#d4ff00] transition">
+                      Open <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </div>
                   </div>
                 </Link>
               </FadeUp>
@@ -319,15 +327,30 @@ function Home() {
 
 function PinnedHowItWorks() {
   const ref = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-66.6%"]);
+  const [maxScroll, setMaxScroll] = useState(0);
+
+  useEffect(() => {
+    function measure() {
+      const t = trackRef.current;
+      if (!t) return;
+      setMaxScroll(Math.max(0, t.scrollWidth - window.innerWidth + 48));
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  const x = useTransform(scrollYProgress, [0, 0.05, 0.92, 1], [0, 0, -maxScroll, -maxScroll]);
+
   const steps = [
     { n: "01", t: "Take the Quiz", d: "10 scenario questions. Pick A/B/C/D. No registration. No data collection. ~3 minutes." },
     { n: "02", t: "Mint your Card", d: "Algorithm crunches your answers. You get a holographic Rizz Identity Card with score, rank & traits." },
     { n: "03", t: "Dominate the Arena", d: "Post lines. Vote on others. Climb the leaderboard. Share your card everywhere." },
   ];
   return (
-    <section ref={ref} className="relative h-[260vh]">
+    <section ref={ref} className="relative h-[340vh]">
       <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 w-full mb-12">
           <SectionLabel index="—" label="How It Works" />
@@ -335,9 +358,9 @@ function PinnedHowItWorks() {
             Three steps. <span className="text-[#d4ff00]">Zero</span> fumble.
           </h2>
         </div>
-        <motion.div style={{ x }} className="flex gap-6 px-6 will-change-transform">
+        <motion.div ref={trackRef} style={{ x }} className="flex gap-6 px-6 will-change-transform w-max">
           {steps.map((s) => (
-            <div key={s.n} className="w-[88vw] md:w-[60vw] lg:w-[55vw] shrink-0 border border-white/10 bg-[#0a0a0c] p-10 sm:p-16 min-h-[55vh] flex flex-col justify-between">
+            <div key={s.n} className="w-[88vw] md:w-[60vw] lg:w-[55vw] shrink-0 border border-white/10 bg-[#0a0a0c] p-10 sm:p-16 min-h-[55vh] flex flex-col justify-between rounded-md">
               <span className="font-mono text-sm font-bold tracking-[0.4em] text-[#d4ff00]">{s.n}</span>
               <div>
                 <h3 className="font-display text-4xl sm:text-6xl font-extrabold uppercase tracking-tighter text-white leading-[0.95]">{s.t}</h3>
