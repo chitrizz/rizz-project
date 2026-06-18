@@ -118,6 +118,34 @@
     0%, 100% { transform: translateY(0); opacity: 0.4; }
     50%       { transform: translateY(6px); opacity: 0.9; }
   }
+  @keyframes signal-orbit {
+    0%   { transform: translate(-50%, -50%) rotateX(64deg) rotateZ(0deg); }
+    100% { transform: translate(-50%, -50%) rotateX(64deg) rotateZ(360deg); }
+  }
+  @keyframes signal-scan {
+    0%   { transform: translateX(-125%) skewX(-18deg); opacity: 0; }
+    15%  { opacity: 0.85; }
+    70%  { opacity: 0.6; }
+    100% { transform: translateX(160%) skewX(-18deg); opacity: 0; }
+  }
+  @keyframes signal-face-pulse {
+    0%, 100% { opacity: 0.58; filter: saturate(1); }
+    50%      { opacity: 0.9; filter: saturate(1.45); }
+  }
+  @keyframes panel-sweep {
+    0%   { transform: translateX(-130%) skewX(-18deg); opacity: 0; }
+    20%  { opacity: 0.8; }
+    80%  { opacity: 0.55; }
+    100% { transform: translateX(160%) skewX(-18deg); opacity: 0; }
+  }
+  @keyframes grid-drift {
+    0%, 100% { background-position: 0 0; }
+    50%      { background-position: 34px 22px; }
+  }
+  @keyframes edge-glow {
+    0%, 100% { opacity: 0.35; }
+    50%      { opacity: 0.88; }
+  }
 }
 
 :root {
@@ -240,6 +268,305 @@
   mix-blend-mode: screen;
   pointer-events: none;
 }
+
+.receipts-section::before,
+.arsenal-section::before,
+.card-showcase-section::before,
+.signal-engine-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(212,255,0,0.06), transparent 25%, rgba(34,211,238,0.05) 58%, transparent),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 42px);
+  opacity: 0.52;
+}
+
+.receipts-wash,
+.arsenal-ambient,
+.signal-engine-wash {
+  position: absolute;
+  inset: -18% -10%;
+  pointer-events: none;
+  background:
+    linear-gradient(115deg, transparent 0%, rgba(255,46,147,0.13) 22%, transparent 42%),
+    linear-gradient(25deg, transparent 28%, rgba(212,255,0,0.12) 48%, transparent 68%),
+    linear-gradient(155deg, transparent 35%, rgba(34,211,238,0.12) 62%, transparent 80%);
+  filter: blur(54px);
+  opacity: 0.62;
+}
+
+.receipt-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 6px;
+  background:
+    linear-gradient(140deg, rgba(255,255,255,0.07), rgba(255,255,255,0.018) 42%, rgba(255,255,255,0.045)),
+    #070708;
+  padding: 1.75rem;
+  transform-style: preserve-3d;
+  box-shadow: 0 26px 80px rgba(0,0,0,0.28);
+}
+
+.receipt-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(100deg, transparent 10%, color-mix(in srgb, var(--receipt-accent) 28%, transparent) 48%, transparent 72%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 18px);
+  opacity: 0.18;
+  animation: panel-sweep 6.5s ease-in-out infinite;
+}
+
+.receipt-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 1.75rem 1.2rem 1.75rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--receipt-accent), transparent);
+  opacity: 0.72;
+}
+
+.receipt-value {
+  font-size: 5.25rem;
+  text-shadow: 0 0 30px color-mix(in srgb, var(--receipt-accent) 22%, transparent);
+}
+
+.arsenal-ambient {
+  opacity: 0.78;
+  filter: blur(44px);
+}
+
+.arsenal-grid-shell {
+  position: relative;
+}
+
+.arsenal-grid-shell::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.arsenal-card {
+  border: 1px solid rgba(255,255,255,0.11);
+  border-radius: 6px;
+  background:
+    linear-gradient(150deg, rgba(255,255,255,0.075), rgba(255,255,255,0.018) 45%, rgba(255,255,255,0.055)),
+    linear-gradient(110deg, color-mix(in srgb, var(--feature-accent) 12%, transparent), transparent 36%),
+    #070708;
+  box-shadow: 0 28px 90px rgba(0,0,0,0.3);
+  transform-style: preserve-3d;
+  transition:
+    border-color 420ms ease,
+    box-shadow 420ms ease,
+    background 420ms ease,
+    transform 420ms ease;
+}
+
+.arsenal-card::before {
+  content: "";
+  position: absolute;
+  inset: -40% -70%;
+  background: linear-gradient(100deg, transparent 38%, color-mix(in srgb, var(--feature-accent) 28%, transparent), transparent 58%);
+  opacity: 0;
+  transform: translateX(-30%) skewX(-18deg);
+  transition: opacity 420ms ease;
+}
+
+.arsenal-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 1.75rem 1.3rem 1.75rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--feature-accent), transparent);
+  opacity: 0.35;
+  animation: edge-glow 3.2s ease-in-out infinite;
+}
+
+.arsenal-card:hover {
+  border-color: color-mix(in srgb, var(--feature-accent) 64%, rgba(255,255,255,0.1));
+  box-shadow:
+    0 34px 110px rgba(0,0,0,0.38),
+    0 0 44px color-mix(in srgb, var(--feature-accent) 16%, transparent);
+  transform: translateZ(12px);
+}
+
+.arsenal-card:hover::before {
+  opacity: 1;
+  animation: panel-sweep 1.4s ease-out;
+}
+
+.arsenal-card-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: 0.42;
+  animation: grid-drift 12s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.signal-engine-section {
+  min-height: 760px;
+}
+
+.signal-engine-wash {
+  opacity: 0.76;
+}
+
+.signal-visual-stage {
+  transform-origin: 55% 52%;
+}
+
+.signal-prism {
+  position: absolute;
+  border: 1px solid rgba(255,255,255,0.13);
+  background:
+    linear-gradient(112deg, rgba(255,255,255,0.12), rgba(255,255,255,0.015) 45%, rgba(212,255,0,0.07)),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 24px);
+  box-shadow: 0 28px 90px rgba(0,0,0,0.32);
+  backdrop-filter: blur(12px);
+}
+
+.signal-prism::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.18), transparent);
+  animation: panel-sweep 5.6s ease-in-out infinite;
+  opacity: 0.45;
+}
+
+.signal-prism-a {
+  left: 26%;
+  top: 42%;
+  width: 310px;
+  height: 170px;
+}
+
+.signal-prism-b {
+  left: 43%;
+  top: 35%;
+  width: 360px;
+  height: 210px;
+}
+
+.signal-prism-c {
+  left: 36%;
+  top: 55%;
+  width: 460px;
+  height: 120px;
+  border-color: rgba(34,211,238,0.15);
+}
+
+.signal-metric-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 3px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.018) 54%),
+    rgba(7,7,9,0.82);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,0.38),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.signal-metric-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 20%, color-mix(in srgb, var(--node-accent) 28%, transparent), transparent 62%);
+  animation: panel-sweep 4.8s ease-in-out infinite;
+  opacity: 0.32;
+}
+
+.signal-orbit-ring {
+  transform: translate(-50%, -50%) rotateX(64deg);
+  transform-style: preserve-3d;
+  animation: signal-orbit 18s linear infinite;
+  box-shadow:
+    inset 0 0 34px rgba(212, 255, 0, 0.05),
+    0 0 52px rgba(34, 211, 238, 0.08);
+}
+
+.signal-orbit-ring::before,
+.signal-orbit-ring::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: inherit;
+}
+
+.signal-orbit-ring::after {
+  inset: 28%;
+  border-color: rgba(212, 255, 0, 0.16);
+  animation: signal-orbit 11s linear reverse infinite;
+}
+
+.signal-orbit-ring-alt {
+  animation-duration: 12s;
+  animation-direction: reverse;
+}
+
+.signal-orbit-ring-vertical {
+  animation-duration: 15s;
+  animation-direction: alternate;
+}
+
+.signal-core {
+  transform-style: preserve-3d;
+  transform-origin: center;
+}
+
+.signal-core::before {
+  content: "";
+  position: absolute;
+  inset: -34px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  transform: translateZ(-18px) rotateZ(45deg);
+}
+
+.signal-core::after {
+  content: "";
+  position: absolute;
+  inset: 16px -38px;
+  background: linear-gradient(90deg, transparent, rgba(212, 255, 0, 0.22), rgba(34, 211, 238, 0.16), transparent);
+  animation: signal-scan 3.6s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+.signal-core-face {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.11), rgba(255,255,255,0.025)),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 18px),
+    #08080a;
+  box-shadow:
+    inset 0 0 28px rgba(212, 255, 0, 0.08),
+    0 24px 80px rgba(0, 0, 0, 0.34);
+  animation: signal-face-pulse 4.2s ease-in-out infinite;
+  backface-visibility: hidden;
+}
+
+.signal-core-front { transform: translateZ(96px); }
+.signal-core-back { transform: rotateY(180deg) translateZ(96px); }
+.signal-core-left { transform: rotateY(-90deg) translateZ(96px); }
+.signal-core-right { transform: rotateY(90deg) translateZ(96px); }
+.signal-core-top { transform: rotateX(90deg) translateZ(96px); }
+.signal-core-bottom { transform: rotateX(-90deg) translateZ(96px); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
