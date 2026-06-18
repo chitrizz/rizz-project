@@ -2,7 +2,7 @@ import { o as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
 import { t as SkewButton } from "./SkewButton-DQm-cxCW.mjs";
 import { t as SectionLabel } from "./SectionLabel-cVhLYZyM.mjs";
-import { A as ArrowUpRight, y as Flame } from "../_libs/lucide-react.mjs";
+import { g as Flame, x as ArrowUpRight } from "../_libs/lucide-react.mjs";
 import { a as useScroll, i as useMotionValue, n as useTransform, o as motion, t as useSpring } from "../_libs/framer-motion.mjs";
 import { g as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { t as IdentityCard } from "./IdentityCard-Dgbof_AG.mjs";

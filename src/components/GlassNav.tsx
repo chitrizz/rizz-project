@@ -1,10 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import { Menu, X, User, LogOut, ChevronDown } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
+import { motion } from "framer-motion";
 import { SkewButton } from "./SkewButton";
 import { ShineBorder } from "./ui/shine-border";
-import { useAuth } from "../stores/auth";
 
 const links = [
   { to: "/quiz", label: "Quiz", num: "01" },
@@ -17,18 +16,7 @@ const links = [
 
 export function GlassNav() {
   const [open, setOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const { user, profile, initialize, initialized, signOut } = useAuth();
-
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
-
-  const handleSignOut = async () => {
-    await signOut();
-    setUserMenuOpen(false);
-  };
 
   return (
     <nav className="sticky top-0 z-50 w-full px-4 sm:px-6 py-4">
@@ -104,73 +92,9 @@ export function GlassNav() {
             <div className="relative flex items-center gap-2">
               <span className="hidden md:inline font-mono text-[9px] uppercase tracking-widest text-white/30 px-2">v2.0.4</span>
 
-              {/* Auth section */}
-              {initialized && user && profile ? (
-                <div className="relative">
-                  <button
-                    onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 transition"
-                  >
-                    {profile.avatar_url ? (
-                      <img
-                        src={profile.avatar_url}
-                        alt={profile.username}
-                        className="size-6 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="size-6 rounded-full bg-[#d4ff00]/20 grid place-items-center">
-                        <User className="size-3 text-[#d4ff00]" />
-                      </div>
-                    )}
-                    <span className="hidden sm:block text-xs font-bold text-white/80">
-                      @{profile.username}
-                    </span>
-                    <ChevronDown className="size-3 text-white/50" />
-                  </button>
-
-                  <AnimatePresence>
-                    {userMenuOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute right-0 top-full mt-2 w-48 rounded-md border border-white/10 bg-[#0a0a0c] backdrop-blur-xl overflow-hidden"
-                        style={{
-                          boxShadow: "0 20px 40px -12px rgba(0,0,0,0.5)",
-                        }}
-                      >
-                        <Link
-                          to="/profile"
-                          onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-2 px-4 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-white transition"
-                        >
-                          <User className="size-4" />
-                          <span>My Profile</span>
-                        </Link>
-                        <button
-                          onClick={handleSignOut}
-                          className="w-full flex items-center gap-2 px-4 py-3 text-sm text-[#ff2e93] hover:bg-[#ff2e93]/10 transition border-t border-white/5"
-                        >
-                          <LogOut className="size-4" />
-                          <span>Sign Out</span>
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ) : initialized ? (
-                <Link to="/login" className="hidden sm:block">
-                  <SkewButton size="sm" variant="outline">Sign In</SkewButton>
-                </Link>
-              ) : null}
-
-              {/* Always show Start Quiz if no auth */}
-              {(!initialized || !user || !profile) && (
-                <Link to="/quiz" className="hidden sm:block">
-                  <SkewButton size="sm">Start Quiz</SkewButton>
-                </Link>
-              )}
+              <Link to="/quiz" className="hidden sm:block">
+                <SkewButton size="sm">Start Quiz</SkewButton>
+              </Link>
 
               <button
                 onClick={() => setOpen((o) => !o)}
@@ -205,49 +129,14 @@ export function GlassNav() {
               </Link>
             ))}
 
-            {/* Mobile auth section */}
             <div className="border-t border-white/10 mt-2 pt-2">
-              {initialized && user && profile ? (
-                <>
-                  <Link
-                    to="/profile"
-                    onClick={() => setOpen(false)}
-                    className="px-3 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-white hover:bg-white/5 flex items-center gap-3"
-                  >
-                    {profile.avatar_url ? (
-                      <img
-                        src={profile.avatar_url}
-                        alt={profile.username}
-                        className="size-6 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="size-6 rounded-full bg-[#d4ff00]/20 grid place-items-center">
-                        <User className="size-3 text-[#d4ff00]" />
-                      </div>
-                    )}
-                    @{profile.username}
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setOpen(false);
-                      handleSignOut();
-                    }}
-                    className="w-full px-3 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-[#ff2e93] hover:bg-[#ff2e93]/10 flex items-center gap-3"
-                  >
-                    <LogOut className="size-4" />
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/login"
-                  onClick={() => setOpen(false)}
-                  className="px-3 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-[#d4ff00] hover:bg-[#d4ff00]/10 flex items-center gap-3"
-                >
-                  <User className="size-4" />
-                  Sign In
-                </Link>
-              )}
+              <Link
+                to="/quiz"
+                onClick={() => setOpen(false)}
+                className="px-3 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-[#d4ff00] hover:bg-[#d4ff00]/10 flex items-center gap-3"
+              >
+                Start Quiz
+              </Link>
             </div>
           </div>
         )}

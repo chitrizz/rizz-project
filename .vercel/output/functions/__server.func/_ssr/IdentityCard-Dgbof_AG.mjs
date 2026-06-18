@@ -1,8 +1,8 @@
 import { o as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
 import { i as useMotionValue, n as useTransform, o as motion, r as useMotionTemplate, t as useSpring } from "../_libs/framer-motion.mjs";
-import { t as ShineBorder } from "./shine-border-BWdCmEk2.mjs";
 import { n as rankFor } from "./ranks-CsBP6wlg.mjs";
+import { t as ShineBorder } from "./shine-border-BWdCmEk2.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/IdentityCard-Dgbof_AG.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();

@@ -2,7 +2,7 @@ import { o as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
 import { t as SkewButton } from "./SkewButton-DQm-cxCW.mjs";
 import { t as SectionLabel } from "./SectionLabel-cVhLYZyM.mjs";
-import { C as Copy, T as Clock, l as Share2, o as Sparkles, y as Flame } from "../_libs/lucide-react.mjs";
+import { a as Sparkles, b as Clock, c as Share2, g as Flame, v as Copy } from "../_libs/lucide-react.mjs";
 import { o as motion } from "../_libs/framer-motion.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
 import { n as SYMBOL, r as ZodiacPicker, t as ELEMENT } from "./ZodiacPicker-DxmeY79W.mjs";

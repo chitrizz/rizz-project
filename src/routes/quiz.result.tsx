@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { toPng } from "html-to-image";
 import { useIdentity } from "../stores/identity";
-import { useAuth } from "../stores/auth";
 import { IdentityCard } from "../components/IdentityCard";
 import { SkewButton } from "../components/SkewButton";
 import { SectionLabel } from "../components/SectionLabel";
@@ -27,7 +26,6 @@ export const Route = createFileRoute("/quiz/result")({
 
 function ResultPage() {
   const latest = useIdentity((s) => s.latest);
-  const profile = useAuth((s) => s.profile);
   const navigate = useNavigate();
   const cardRef = useRef<HTMLDivElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -95,7 +93,7 @@ function ResultPage() {
             cardNumber={latest.cardNumber}
             score={latest.score}
             traits={latest.traits}
-            username={profile ? `@${profile.username}` : `@anon_${latest.cardNumber.slice(3)}`}
+            username={`@anon_${latest.cardNumber.slice(3)}`}
           />
         </motion.div>
 
