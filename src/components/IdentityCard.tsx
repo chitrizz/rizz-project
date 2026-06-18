@@ -10,83 +10,278 @@ interface Props {
   tilt?: boolean;
 }
 
-const RARITY_COLOR: Record<string, string> = {
-  Common:    "text-white/80 border-white/25 bg-white/5",
-  Rare:      "text-[#22d3ee] border-[#22d3ee]/50 bg-[#22d3ee]/10",
-  Epic:      "text-[#ff2e93] border-[#ff2e93]/50 bg-[#ff2e93]/10",
-  Legendary: "text-[#ffd400] border-[#ffd400]/50 bg-[#ffd400]/10",
-  Mythic:    "text-[#d4ff00] border-[#d4ff00]/60 bg-[#d4ff00]/10",
-};
+/* ─── Per-tier visual themes with high-contrast metallic base ──────────────── */
+const TIER_THEME = {
+  Common: {
+    bg: "linear-gradient(135deg, #ffffff 0%, #f2f2f5 20%, #dcdcd6 40%, #c4c4cc 55%, #e1e1e6 75%, #ffffff 100%)",
+    outerGlow:
+      "radial-gradient(ellipse at 25% 25%, rgba(180,180,200,0.4) 0%, transparent 60%), " +
+      "radial-gradient(ellipse at 75% 75%, rgba(150,150,170,0.25) 0%, transparent 60%)",
+    shadow:
+      "0 0 60px -10px rgba(150,150,170,0.35), 0 30px 60px -20px rgba(0,0,0,0.25), " +
+      "inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.06)",
+    border: "rgba(180,180,190,0.6)",
+    holoOpacity: 0.38,
+    text: "#0f172a",
+    subtext: "#64748b",
+    accentText: "#475569",
+    scoreText: "#0f172a",
+    barTrack: "rgba(0,0,0,0.08)",
+    barFill: "linear-gradient(90deg, #94a3b8 0%, #cbd5e1 50%, #64748b 100%)",
+    barGlow: "rgba(148,163,184,0.3)",
+    traitBg: "rgba(0,0,0,0.05)",
+    traitBorder: "rgba(0,0,0,0.08)",
+    traitText: "#475569",
+    chipGrad: "conic-gradient(from 180deg, #94a3b8, #cbd5e1, #94a3b8)",
+    barcode: "rgba(15,23,42,0.15)",
+    rarityClass: "bg-slate-200/60 border-slate-400/30 text-slate-800",
+  },
+  Rare: {
+    bg: "linear-gradient(135deg, #ffffff 0%, #e6f0fa 20%, #c0d8f0 40%, #a2bce4 55%, #c5dcf2 75%, #ffffff 100%)",
+    outerGlow:
+      "radial-gradient(ellipse at 25% 25%, rgba(14,165,233,0.45) 0%, transparent 60%), " +
+      "radial-gradient(ellipse at 75% 75%, rgba(2,132,199,0.3) 0%, transparent 60%)",
+    shadow:
+      "0 0 70px -10px rgba(14,165,233,0.4), 0 30px 60px -20px rgba(0,0,0,0.25), " +
+      "inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(2,132,199,0.06)",
+    border: "rgba(125,175,225,0.6)",
+    holoOpacity: 0.52,
+    text: "#034078",
+    subtext: "#3a7ca5",
+    accentText: "#1d4ed8",
+    scoreText: "#001f54",
+    barTrack: "rgba(3,64,120,0.08)",
+    barFill: "linear-gradient(90deg, #38bdf8 0%, #1d4ed8 50%, #0369a1 100%)",
+    barGlow: "rgba(56,189,248,0.4)",
+    traitBg: "rgba(3,64,120,0.05)",
+    traitBorder: "rgba(3,64,120,0.1)",
+    traitText: "#1d4ed8",
+    chipGrad: "conic-gradient(from 180deg, #38bdf8, #1d4ed8, #38bdf8)",
+    barcode: "rgba(3,64,120,0.18)",
+    rarityClass: "bg-sky-100/60 border-sky-400/30 text-sky-800",
+  },
+  Epic: {
+    bg: "linear-gradient(135deg, #ffffff 0%, #faf0ff 20%, #e6d3ff 40%, #cca3ff 55%, #e6d5ff 75%, #ffffff 100%)",
+    outerGlow:
+      "radial-gradient(ellipse at 25% 25%, rgba(168,85,247,0.45) 0%, transparent 60%), " +
+      "radial-gradient(ellipse at 75% 75%, rgba(192,38,211,0.3) 0%, transparent 60%)",
+    shadow:
+      "0 0 70px -10px rgba(168,85,247,0.4), 0 30px 60px -20px rgba(0,0,0,0.25), " +
+      "inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(168,85,247,0.06)",
+    border: "rgba(200,160,250,0.6)",
+    holoOpacity: 0.65,
+    text: "#3b0764",
+    subtext: "#701a75",
+    accentText: "#a21caf",
+    scoreText: "#2e004f",
+    barTrack: "rgba(59,7,100,0.08)",
+    barFill: "linear-gradient(90deg, #c084fc 0%, #a21caf 50%, #7e22ce 100%)",
+    barGlow: "rgba(192,132,252,0.4)",
+    traitBg: "rgba(59,7,100,0.05)",
+    traitBorder: "rgba(59,7,100,0.1)",
+    traitText: "#a21caf",
+    chipGrad: "conic-gradient(from 180deg, #c084fc, #7e22ce, #c084fc)",
+    barcode: "rgba(59,7,100,0.18)",
+    rarityClass: "bg-purple-100/60 border-purple-400/30 text-purple-800",
+  },
+  Legendary: {
+    bg: "linear-gradient(135deg, #ffffff 0%, #fffbea 20%, #fdf0bd 40%, #ebd060 55%, #fff1b8 75%, #ffffff 100%)",
+    outerGlow:
+      "radial-gradient(ellipse at 25% 25%, rgba(234,179,8,0.5) 0%, transparent 60%), " +
+      "radial-gradient(ellipse at 75% 75%, rgba(202,138,4,0.3) 0%, transparent 60%)",
+    shadow:
+      "0 0 80px -10px rgba(234,179,8,0.45), 0 30px 60px -20px rgba(0,0,0,0.25), " +
+      "inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(202,138,4,0.06)",
+    border: "rgba(230,190,70,0.6)",
+    holoOpacity: 0.76,
+    text: "#451a03",
+    subtext: "#78350f",
+    accentText: "#b45309",
+    scoreText: "#3b1702",
+    barTrack: "rgba(69,26,3,0.08)",
+    barFill: "linear-gradient(90deg, #fde047 0%, #ea580c 50%, #ca8a04 100%)",
+    barGlow: "rgba(253,224,71,0.5)",
+    traitBg: "rgba(69,26,3,0.05)",
+    traitBorder: "rgba(69,26,3,0.1)",
+    traitText: "#b45309",
+    chipGrad: "conic-gradient(from 180deg, #fde047, #ca8a04, #fde047)",
+    barcode: "rgba(69,26,3,0.2)",
+    rarityClass: "bg-amber-100/60 border-amber-400/30 text-amber-800",
+  },
+  Mythic: {
+    bg: "linear-gradient(135deg, #ffffff 0%, #fbf8ff 20%, #ebd5ff 40%, #cca3ff 55%, #ebd8ff 75%, #ffffff 100%)",
+    outerGlow:
+      "radial-gradient(ellipse at 20% 20%, rgba(234,179,8,0.45) 0%, transparent 55%), " +
+      "radial-gradient(ellipse at 80% 80%, rgba(236,72,153,0.45) 0%, transparent 55%), " +
+      "radial-gradient(ellipse at 50% 50%, rgba(99,102,241,0.35) 0%, transparent 65%)",
+    shadow:
+      "0 0 90px -10px rgba(139,92,246,0.5), 0 30px 60px -20px rgba(0,0,0,0.28), " +
+      "inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(99,102,241,0.06)",
+    border: "rgba(180,140,255,0.65)",
+    holoOpacity: 0.9,
+    text: "#1e1b4b",
+    subtext: "#312e81",
+    accentText: "#4338ca",
+    scoreText: "#120e3d",
+    barTrack: "rgba(30,27,75,0.08)",
+    barFill: "linear-gradient(90deg, #a78bfa 0%, #ec4899 50%, #f59e0b 100%)",
+    barGlow: "rgba(167,139,250,0.5)",
+    traitBg: "rgba(30,27,75,0.05)",
+    traitBorder: "rgba(30,27,75,0.1)",
+    traitText: "#4338ca",
+    chipGrad: "conic-gradient(from 180deg, #a78bfa, #ec4899, #f59e0b, #a78bfa)",
+    barcode: "rgba(30,27,75,0.2)",
+    rarityClass: "bg-indigo-100/60 border-indigo-400/30 text-indigo-800",
+  },
+} as const;
 
+/* ─── Inner card ──────────────────────────────────────────────────────── */
 const Inner = forwardRef<HTMLDivElement, Props>(function Inner(
-  { cardNumber, score, traits, username = "Subject Zero" }, ref
+  { cardNumber, score, traits, username = "Subject Zero" },
+  ref
 ) {
   const rank = rankFor(score);
-  return (
-    <div ref={ref} className="relative w-full max-w-md mx-auto" style={{ transform: "translateZ(0)" }}>
-      {/* outer glow */}
-      <div className="absolute -inset-10 bg-[radial-gradient(circle_at_30%_20%,rgba(212,255,0,0.35),transparent_60%),radial-gradient(circle_at_70%_80%,rgba(255,46,147,0.3),transparent_60%)] blur-3xl pointer-events-none" />
+  const theme = TIER_THEME[rank.rarity];
 
+  return (
+    <div
+      ref={ref}
+      className="relative w-full max-w-md mx-auto"
+      style={{ transform: "translateZ(0)" }}
+    >
+      {/* Outer ambient glow */}
+      <div
+        className="absolute -inset-10 blur-3xl pointer-events-none"
+        style={{ background: theme.outerGlow }}
+      />
+
+      {/* Card face */}
       <div
         className="relative aspect-[1.586/1] w-full rounded-[20px] p-6 sm:p-7 overflow-hidden"
         style={{
-          background:
-            "linear-gradient(135deg, #0a0a0c 0%, #121214 55%, #0a0a0c 100%)",
-          boxShadow:
-            "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 0 1px rgba(255,255,255,0.04), 0 30px 80px -20px rgba(0,0,0,0.7), 0 0 60px -20px rgba(212,255,0,0.25)",
+          background: theme.bg,
+          boxShadow: theme.shadow,
+          border: `1px solid ${theme.border}`,
         }}
       >
-        {/* iridescent base wash */}
+        {/* ── Stacked Holographic Overlays (Highly-reflective rainbow bands) ── */}
+        <div className="absolute inset-0 overflow-hidden rounded-[20px] pointer-events-none">
+          {/* Overlay 1: Rich colors (overlay blend) */}
+          <div
+            style={{
+              position: "absolute",
+              inset: "-20%",
+              background: `linear-gradient(
+                115deg,
+                transparent 15%,
+                rgba(255, 0, 128, 0.35) 30%,
+                rgba(255, 230, 0, 0.35) 42%,
+                rgba(0, 255, 128, 0.35) 50%,
+                rgba(0, 128, 255, 0.35) 58%,
+                rgba(128, 0, 255, 0.35) 70%,
+                transparent 85%
+              )`,
+              backgroundSize: "200% 200%",
+              backgroundPosition: `calc(var(--mx, 50%) * 1.6 - 30%) calc(var(--my, 50%) * 1.6 - 30%)`,
+              mixBlendMode: "overlay",
+              opacity: theme.holoOpacity * 0.9,
+              filter: "blur(12px)",
+              willChange: "background-position",
+            }}
+          />
+          {/* Overlay 2: Bright specular iridescence (color-dodge blend) */}
+          <div
+            style={{
+              position: "absolute",
+              inset: "-20%",
+              background: `linear-gradient(
+                115deg,
+                transparent 20%,
+                rgba(255, 0, 128, 0.45) 32%,
+                rgba(255, 230, 0, 0.45) 44%,
+                rgba(0, 255, 128, 0.45) 50%,
+                rgba(0, 128, 255, 0.45) 58%,
+                rgba(128, 0, 255, 0.45) 68%,
+                transparent 80%
+              )`,
+              backgroundSize: "220% 220%",
+              backgroundPosition: `calc(var(--mx, 50%) * 1.8 - 40%) calc(var(--my, 50%) * 1.8 - 40%)`,
+              mixBlendMode: "color-dodge",
+              opacity: theme.holoOpacity,
+              filter: "blur(9px)",
+              willChange: "background-position",
+            }}
+          />
+        </div>
+
+        {/* ── Animated sheen sweep (auto) ── */}
         <div
-          className="absolute inset-0 opacity-60 pointer-events-none"
+          className="absolute inset-0 rounded-[20px] pointer-events-none"
           style={{
             background:
-              "radial-gradient(110% 80% at 0% 0%, rgba(212,255,0,0.18), transparent 55%), radial-gradient(110% 80% at 100% 100%, rgba(255,46,147,0.18), transparent 55%), radial-gradient(90% 60% at 80% 10%, rgba(34,211,238,0.15), transparent 60%)",
+              "linear-gradient(115deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.2) 48%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.2) 52%, rgba(255,255,255,0) 70%) 0 0 / 250% 100% no-repeat",
+            animation: "sheen-pan 7s linear infinite",
             mixBlendMode: "screen",
           }}
         />
-        {/* moving sheen */}
-        <div className="absolute inset-0 holo-sheen rounded-[20px]" />
-        {/* cursor-follow specular highlight (uses TiltCard --mx/--my) */}
+
+        {/* ── Mouse-tracked glare spot ── */}
         <div
           aria-hidden
-          className="absolute inset-0 pointer-events-none opacity-70"
+          className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(220px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.22), transparent 60%)",
+              "radial-gradient(220px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.32), transparent 70%)",
             mixBlendMode: "screen",
           }}
         />
-        {/* grain */}
+
+        {/* ── Subtle metal weathering texture ── */}
         <div
-          className="grain-bg absolute inset-0 opacity-[0.07] mix-blend-overlay pointer-events-none"
+          className="grain-bg absolute inset-0 opacity-[0.025] mix-blend-overlay pointer-events-none"
           style={{ backgroundSize: "140px 140px" }}
         />
 
-        {/* Top */}
+        {/* ════════════ CONTENT ════════════ */}
+
+        {/* Top row: card number + rarity badge */}
         <div className="relative flex justify-between items-start">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/45 mb-1">Identity · Document</p>
-            <p className="font-display text-xl font-bold text-white tracking-tight uppercase">{cardNumber}</p>
+            <p
+              className="font-mono text-[9px] uppercase tracking-[0.3em] mb-0.5"
+              style={{ color: theme.subtext }}
+            >
+              Identity · Document
+            </p>
+            <p
+              className="font-display text-xl font-bold tracking-tight uppercase"
+              style={{ color: theme.text }}
+            >
+              {cardNumber}
+            </p>
           </div>
-          <div className={`px-2.5 py-1 border rounded-md backdrop-blur-sm ${RARITY_COLOR[rank.rarity]}`}>
-            <span className="text-[9px] font-bold tracking-widest uppercase font-mono">{rank.rarity}</span>
+          <div
+            className={`px-2.5 py-0.5 border rounded-md backdrop-blur-sm ${theme.rarityClass}`}
+          >
+            <span className="text-[9px] font-bold tracking-widest uppercase font-mono">
+              {rank.rarity}
+            </span>
           </div>
         </div>
 
-        {/* Holo chip + barcode row */}
-        <div className="relative mt-3 flex items-center gap-3">
+        {/* Holo chip + barcode */}
+        <div className="relative mt-2.5 flex items-center gap-3">
           <div
-            className="h-7 w-10 rounded-[4px] relative overflow-hidden"
+            className="h-7 w-10 rounded-[4px] relative overflow-hidden flex-shrink-0"
             style={{
-              background:
-                "conic-gradient(from 200deg at 50% 50%, #d4ff00, #22d3ee, #ff2e93, #ffd400, #d4ff00)",
-              boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.4), inset 0 0 8px rgba(255,255,255,0.4)",
+              background: theme.chipGrad,
+              boxShadow:
+                "inset 0 0 0 1px rgba(0,0,0,0.1), inset 0 0 6px rgba(255,255,255,0.2)",
             }}
           >
-            <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-px p-px opacity-60">
+            <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-px p-px opacity-30">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="bg-black/40" />
+                <div key={i} className="bg-black/20 rounded-[1px]" />
               ))}
             </div>
           </div>
@@ -94,64 +289,92 @@ const Inner = forwardRef<HTMLDivElement, Props>(function Inner(
             {Array.from({ length: 32 }).map((_, i) => (
               <span
                 key={i}
-                className="bg-white/30"
-                style={{ width: 1.5, height: `${30 + ((i * 53) % 70)}%` }}
+                style={{
+                  display: "inline-block",
+                  width: 1.5,
+                  height: `${30 + ((i * 53) % 70)}%`,
+                  backgroundColor: theme.barcode,
+                }}
               />
             ))}
           </div>
         </div>
 
-        {/* Middle bar */}
-        <div className="relative mt-4 space-y-2">
-          <div className="h-1.5 bg-white/10 w-full rounded-full overflow-hidden">
+        {/* Charisma progress bar */}
+        <div className="relative mt-3.5 space-y-1.5">
+          <div
+            className="h-1.5 rounded-full overflow-hidden"
+            style={{ background: theme.barTrack }}
+          >
             <div
-              className="h-full rounded-full"
+              className="h-full rounded-full animate-pulse-soft"
               style={{
                 width: `${score}%`,
-                background: "linear-gradient(90deg, #d4ff00, #22d3ee, #ff2e93)",
-                boxShadow: "0 0 12px rgba(212,255,0,0.6)",
+                background: theme.barFill,
+                boxShadow: `0 0 8px ${theme.barGlow}`,
               }}
             />
           </div>
           <div className="flex justify-between font-mono text-[9px] uppercase font-bold tracking-widest">
-            <span className="text-[#d4ff00]">Charisma Level</span>
-            <span className="text-white/80">{rank.title}</span>
+            <span style={{ color: theme.accentText }}>Charisma Level</span>
+            <span style={{ color: theme.subtext }}>{rank.title}</span>
           </div>
         </div>
 
-        {/* Traits */}
+        {/* Trait chips */}
         <div className="relative flex flex-wrap gap-1.5 mt-3">
           {traits.slice(0, 4).map((t) => (
-            <span key={t} className="text-[9px] px-2 py-0.5 rounded bg-white/[0.06] border border-white/15 text-white/80 font-mono uppercase tracking-wider backdrop-blur-sm">
+            <span
+              key={t}
+              className="text-[9px] px-2 py-0.5 rounded font-mono uppercase tracking-wider backdrop-blur-sm"
+              style={{
+                background: theme.traitBg,
+                border: `1px solid ${theme.traitBorder}`,
+                color: theme.traitText,
+              }}
+            >
               {t}
             </span>
           ))}
         </div>
 
-        {/* Bottom */}
-        <div className="relative mt-4 flex items-end justify-between">
-          <div className="space-y-1">
-            <p className="font-mono text-[9px] uppercase tracking-widest text-white/45">Bearer</p>
-            <p className="text-base font-medium text-white tracking-tight">{username}</p>
+        {/* Bottom row: bearer + score */}
+        <div className="relative mt-3.5 flex items-end justify-between">
+          <div className="space-y-0.5">
+            <p
+              className="font-mono text-[9px] uppercase tracking-widest"
+              style={{ color: theme.subtext }}
+            >
+              Bearer
+            </p>
+            <p
+              className="text-base font-semibold tracking-tight"
+              style={{ color: theme.text }}
+            >
+              {username}
+            </p>
           </div>
           <div className="text-right">
             <p
-              className="font-display text-[48px] font-bold leading-none tracking-tighter"
-              style={{
-                background: "linear-gradient(180deg, #ffffff 0%, #d4ff00 100%)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                color: "transparent",
-                filter: "drop-shadow(0 0 8px rgba(212,255,0,0.35))",
-              }}
+              className="font-display text-[44px] font-bold leading-none tracking-tighter"
+              style={{ color: theme.scoreText }}
             >
               {score}
             </p>
-            <p className="font-mono text-[9px] uppercase tracking-widest text-white/45 mt-0.5">Rizz Score / 100</p>
+            <p
+              className="font-mono text-[9px] uppercase tracking-widest mt-0.5"
+              style={{ color: theme.subtext }}
+            >
+              Rizz Score / 100
+            </p>
           </div>
         </div>
 
-        <div className="absolute bottom-2 left-7 font-mono text-[8px] uppercase tracking-[0.3em] text-white/20">
+        {/* Footer label */}
+        <div
+          className="absolute bottom-2 left-7 font-mono text-[8px] uppercase tracking-[0.3em]"
+          style={{ color: theme.subtext + "60" }}
+        >
           haverizz.com · v2.0.4
         </div>
       </div>
@@ -159,11 +382,14 @@ const Inner = forwardRef<HTMLDivElement, Props>(function Inner(
   );
 });
 
-export const IdentityCard = forwardRef<HTMLDivElement, Props>(function IdentityCard(props, ref) {
-  if (props.tilt === false) return <Inner ref={ref} {...props} />;
-  return (
-    <TiltCard className="w-full">
-      <Inner ref={ref} {...props} />
-    </TiltCard>
-  );
-});
+/* ─── Public export (with optional TiltCard wrapper) ────────────────── */
+export const IdentityCard = forwardRef<HTMLDivElement, Props>(
+  function IdentityCard(props, ref) {
+    if (props.tilt === false) return <Inner ref={ref} {...props} />;
+    return (
+      <TiltCard className="w-full">
+        <Inner ref={ref} {...props} />
+      </TiltCard>
+    );
+  }
+);

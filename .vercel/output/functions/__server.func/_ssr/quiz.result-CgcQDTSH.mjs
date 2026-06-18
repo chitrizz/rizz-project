@@ -1,7 +1,6 @@
 import { o as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
-import { t as SkewButton } from "./SkewButton-DQm-cxCW.mjs";
-import { t as SectionLabel } from "./SectionLabel-cVhLYZyM.mjs";
+import { n as SkewButton, t as SectionLabel } from "./SectionLabel-BZFuGHTC.mjs";
 import { _ as Download, a as Sparkles, f as MessageCircle, m as Link2, n as Twitter, u as RotateCw } from "../_libs/lucide-react.mjs";
 import { o as motion } from "../_libs/framer-motion.mjs";
 import { _ as useNavigate, g as Link } from "../_libs/@tanstack/react-router+[...].mjs";
@@ -9,10 +8,10 @@ import { n as toast } from "../_libs/sonner.mjs";
 import { n as shareTwitter, r as shareWhatsApp, t as copyToClipboard } from "./share-vCaAEs8W.mjs";
 import { n as rankFor } from "./ranks-CsBP6wlg.mjs";
 import { t as useIdentity } from "./identity-C8JpHuFf.mjs";
-import { t as IdentityCard } from "./IdentityCard-xNocF4ga.mjs";
+import { t as IdentityCard } from "./IdentityCard-CazIW9LB.mjs";
 import { t as confetti_module_default } from "../_libs/canvas-confetti.mjs";
 import { t as toPng } from "../_libs/html-to-image.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/quiz.result-CIqc3Z2X.js
+//#region node_modules/.nitro/vite/services/ssr/assets/quiz.result-CgcQDTSH.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function ResultPage() {

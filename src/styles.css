@@ -57,8 +57,10 @@
   --animate-pulse-soft: pulse-soft 3s ease-in-out infinite;
   --animate-grain: grain-shift 8s steps(8) infinite;
   --animate-holo-spin: holo-spin 6s linear infinite;
+  --animate-holo-slow: holo-spin 18s linear infinite;
   --animate-sheen-pan: sheen-pan 5s linear infinite;
   --animate-liquid-sweep: liquid-sweep 9s linear infinite;
+  --animate-count-up: count-up 0.6s ease-out forwards;
 
   @keyframes mesh-drift {
     0%   { transform: translate(0, 0) scale(1); }
@@ -100,6 +102,21 @@
   @keyframes liquid-sweep {
     0%   { transform: translateX(-120%) skewX(-18deg); }
     100% { transform: translateX(220%) skewX(-18deg); }
+  }
+  @keyframes holo-idle-drift {
+    0%   { transform: rotate(0deg) scale(1); }
+    25%  { transform: rotate(8deg) scale(1.04); }
+    50%  { transform: rotate(-5deg) scale(0.98); }
+    75%  { transform: rotate(10deg) scale(1.03); }
+    100% { transform: rotate(0deg) scale(1); }
+  }
+  @keyframes fade-blur-in {
+    from { opacity: 0; transform: translateY(40px); filter: blur(10px); }
+    to   { opacity: 1; transform: translateY(0);   filter: blur(0px); }
+  }
+  @keyframes scroll-hint {
+    0%, 100% { transform: translateY(0); opacity: 0.4; }
+    50%       { transform: translateY(6px); opacity: 0.9; }
   }
 }
 

@@ -2,7 +2,7 @@ import { o as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
 import { t as clsx } from "../_libs/clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/SkewButton-DQm-cxCW.js
+//#region node_modules/.nitro/vite/services/ssr/assets/SectionLabel-BZFuGHTC.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function cn(...inputs) {
@@ -27,5 +27,21 @@ var SkewButton = (0, import_react.forwardRef)(function SkewButton({ variant = "p
 		})
 	});
 });
+function SectionLabel({ index, label, tone = "lime" }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "flex items-center gap-3 font-mono",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				className: `text-[10px] font-bold tracking-[0.3em] uppercase ${tone === "lime" ? "text-[#d4ff00]" : "text-white"}`,
+				children: index
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "h-px w-8 bg-white/20" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				className: "text-[10px] font-bold tracking-[0.3em] uppercase text-white/60",
+				children: label
+			})
+		]
+	});
+}
 //#endregion
-export { cn as n, SkewButton as t };
+export { SkewButton as n, cn as r, SectionLabel as t };
