@@ -9,10 +9,10 @@ import { n as toast } from "../_libs/sonner.mjs";
 import { n as shareTwitter, r as shareWhatsApp, t as copyToClipboard } from "./share-vCaAEs8W.mjs";
 import { n as rankFor } from "./ranks-CsBP6wlg.mjs";
 import { t as useIdentity } from "./identity-C8JpHuFf.mjs";
-import { t as IdentityCard } from "./IdentityCard-Dgbof_AG.mjs";
+import { t as IdentityCard } from "./IdentityCard-BKk8hpju.mjs";
 import { t as confetti_module_default } from "../_libs/canvas-confetti.mjs";
 import { t as toPng } from "../_libs/html-to-image.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/quiz.result-CvZ01SrV.js
+//#region node_modules/.nitro/vite/services/ssr/assets/quiz.result-CkPDzu9Q.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function ResultPage() {

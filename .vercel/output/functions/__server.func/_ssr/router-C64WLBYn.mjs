@@ -1,17 +1,43 @@
 import { o as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react, t as QueryClientProvider } from "../_libs/react+tanstack__react-query.mjs";
-import { t as SkewButton } from "./SkewButton-DQm-cxCW.mjs";
+import { n as cn, t as SkewButton } from "./SkewButton-DQm-cxCW.mjs";
 import { h as Heart, p as Menu, t as X, y as Coffee } from "../_libs/lucide-react.mjs";
 import { o as motion, s as AnimatePresence } from "../_libs/framer-motion.mjs";
 import { c as HeadContent, d as createRouter, f as Outlet, g as Link, h as createRootRouteWithContext, l as useRouterState, m as createFileRoute, p as lazyRouteComponent, s as Scripts, v as useRouter } from "../_libs/@tanstack/react-router+[...].mjs";
 import { n as toast, t as Toaster } from "../_libs/sonner.mjs";
-import { t as ShineBorder } from "./shine-border-BWdCmEk2.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Lenis } from "../_libs/lenis.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-BsIga7K1.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-C64WLBYn.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var styles_default = "/assets/styles-CRDCj4w6.css";
+/**
+* Shine Border — animated gradient outline. Tailwind v4 friendly.
+* Uses CSS mask trick so only the border stroke shows the moving gradient.
+*/
+function ShineBorder({ borderRadius = 12, borderWidth = 1, duration = 14, color = "#FFFFFF", className, children }) {
+	const maskStyle = {
+		inset: 0,
+		borderRadius,
+		padding: borderWidth,
+		background: `radial-gradient(transparent, transparent, ${Array.isArray(color) ? color.join(",") : `${color},${color}`}, transparent, transparent) 0% 0% / 300% 300%`,
+		WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+		WebkitMaskComposite: "xor",
+		mask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+		maskComposite: "exclude",
+		pointerEvents: "none",
+		"--duration": `${duration}s`
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		style: { borderRadius },
+		className: cn("relative", className),
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			"aria-hidden": true,
+			style: maskStyle,
+			className: "absolute animate-shine"
+		}), children]
+	});
+}
 var links = [
 	{
 		to: "/quiz",
@@ -694,7 +720,7 @@ var Route$3 = createFileRoute("/arena")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$3, "component")
 });
-var $$splitComponentImporter$2 = () => import("./routes-G32Zl49K.mjs");
+var $$splitComponentImporter$2 = () => import("./routes-DK_g6avT.mjs");
 var Route$2 = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "HaveRizz — Do You Actually Have Rizz?" },
@@ -732,7 +758,7 @@ var Route$1 = createFileRoute("/quiz/")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-var $$splitComponentImporter = () => import("./quiz.result-CvZ01SrV.mjs");
+var $$splitComponentImporter = () => import("./quiz.result-CkPDzu9Q.mjs");
 var Route = createFileRoute("/quiz/result")({
 	head: () => ({ meta: [
 		{ title: "Your Rizz Identity Card" },
