@@ -7,10 +7,10 @@ import { c as HeadContent, d as createRouter, f as Outlet, g as Link, h as creat
 import { n as toast, t as Toaster } from "../_libs/sonner.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Lenis } from "../_libs/lenis.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-C64WLBYn.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-BoUvIrTm.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
-var styles_default = "/assets/styles-CRDCj4w6.css";
+var styles_default = "/assets/styles-YHWs2Wei.css";
 /**
 * Shine Border — animated gradient outline. Tailwind v4 friendly.
 * Uses CSS mask trick so only the border stroke shows the moving gradient.
@@ -720,7 +720,7 @@ var Route$3 = createFileRoute("/arena")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$3, "component")
 });
-var $$splitComponentImporter$2 = () => import("./routes-DK_g6avT.mjs");
+var $$splitComponentImporter$2 = () => import("./routes-BqJAS7w9.mjs");
 var Route$2 = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "HaveRizz — Do You Actually Have Rizz?" },
@@ -758,7 +758,7 @@ var Route$1 = createFileRoute("/quiz/")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-var $$splitComponentImporter = () => import("./quiz.result-CkPDzu9Q.mjs");
+var $$splitComponentImporter = () => import("./quiz.result-CIqc3Z2X.mjs");
 var Route = createFileRoute("/quiz/result")({
 	head: () => ({ meta: [
 		{ title: "Your Rizz Identity Card" },

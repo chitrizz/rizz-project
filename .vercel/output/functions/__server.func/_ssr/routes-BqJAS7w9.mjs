@@ -5,8 +5,8 @@ import { t as SectionLabel } from "./SectionLabel-cVhLYZyM.mjs";
 import { g as Flame, x as ArrowUpRight } from "../_libs/lucide-react.mjs";
 import { a as useScroll, i as useMotionValue, n as useTransform, o as motion, t as useSpring } from "../_libs/framer-motion.mjs";
 import { g as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { t as IdentityCard } from "./IdentityCard-BKk8hpju.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-DK_g6avT.js
+import { t as IdentityCard } from "./IdentityCard-xNocF4ga.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-BqJAS7w9.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function Magnetic({ children, className, strength = .35 }) {

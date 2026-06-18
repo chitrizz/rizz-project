@@ -28,7 +28,7 @@ const Inner = forwardRef<HTMLDivElement, Props>(function Inner(
       <div className="absolute -inset-10 bg-[radial-gradient(circle_at_30%_20%,rgba(212,255,0,0.35),transparent_60%),radial-gradient(circle_at_70%_80%,rgba(255,46,147,0.3),transparent_60%)] blur-3xl pointer-events-none" />
 
       <div
-        className="relative aspect-[1.586/1] w-full rounded-[20px] p-6 sm:p-7 overflow-hidden holo-frame"
+        className="relative aspect-[1.586/1] w-full rounded-[20px] p-6 sm:p-7 overflow-hidden"
         style={{
           background:
             "linear-gradient(135deg, #0a0a0c 0%, #121214 55%, #0a0a0c 100%)",

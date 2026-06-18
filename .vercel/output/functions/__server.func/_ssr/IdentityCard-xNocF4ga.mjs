@@ -2,7 +2,7 @@ import { o as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react } from "../_libs/react+tanstack__react-query.mjs";
 import { i as useMotionValue, n as useTransform, o as motion, r as useMotionTemplate, t as useSpring } from "../_libs/framer-motion.mjs";
 import { n as rankFor } from "./ranks-CsBP6wlg.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/IdentityCard-BKk8hpju.js
+//#region node_modules/.nitro/vite/services/ssr/assets/IdentityCard-xNocF4ga.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function TiltCard({ children, className, max = 12 }) {
@@ -63,7 +63,7 @@ var Inner = (0, import_react.forwardRef)(function Inner({ cardNumber, score, tra
 		className: "relative w-full max-w-md mx-auto",
 		style: { transform: "translateZ(0)" },
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "absolute -inset-10 bg-[radial-gradient(circle_at_30%_20%,rgba(212,255,0,0.35),transparent_60%),radial-gradient(circle_at_70%_80%,rgba(255,46,147,0.3),transparent_60%)] blur-3xl pointer-events-none" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			className: "relative aspect-[1.586/1] w-full rounded-[20px] p-6 sm:p-7 overflow-hidden holo-frame",
+			className: "relative aspect-[1.586/1] w-full rounded-[20px] p-6 sm:p-7 overflow-hidden",
 			style: {
 				background: "linear-gradient(135deg, #0a0a0c 0%, #121214 55%, #0a0a0c 100%)",
 				boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 0 1px rgba(255,255,255,0.04), 0 30px 80px -20px rgba(0,0,0,0.7), 0 0 60px -20px rgba(212,255,0,0.25)"
