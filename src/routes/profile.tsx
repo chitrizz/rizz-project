@@ -165,7 +165,7 @@ function ProfilePage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <Calendar className="size-3" />
-                    Joined {new Date(profile.created_at).toLocaleDateString(undefined, { month: "short", year: "numeric" })}
+                    Joined {new Date(user.created_at).toLocaleDateString(undefined, { month: "short", year: "numeric" })}
                   </span>
                 </div>
               </div>
