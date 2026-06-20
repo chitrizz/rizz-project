@@ -18,7 +18,7 @@ import { ArrowUpRight, Flame } from "lucide-react";
 const CARD_ROTATION_SECONDS = 4.5;
 const CARD_ROTATION_MS = CARD_ROTATION_SECONDS * 1000;
 
-export const Route = createFileRoute("/")(({
+export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "HaveRizz — Do You Actually Have Rizz?" },
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/")(({
     ],
   }),
   component: Home,
-} as Parameters<typeof createFileRoute<"/", "", "/", string, any>>[0]));
+});
 
 const FEATURES = [
   {
